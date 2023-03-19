@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		400A11BC29C76C450029ABD6 /* kern_stubs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 400A11BB29C76C450029ABD6 /* kern_stubs.cpp */; };
 		403B245529C71C0300CF7A76 /* kern_start.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 403B245429C71C0300CF7A76 /* kern_start.cpp */; };
 		CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE405ED81E4A080700AA0B3D /* plugin_start.cpp */; };
 		CE8DA0832517C41A008C44E8 /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8DA0822517C41A008C44E8 /* libkmod.a */; };
@@ -30,6 +31,7 @@
 /* Begin PBXFileReference section */
 		1C748C271C21952C0024EED2 /* NVMetalFixup.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NVMetalFixup.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C748C2E1C21952C0024EED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		400A11BB29C76C450029ABD6 /* kern_stubs.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = kern_stubs.cpp; sourceTree = "<group>"; };
 		403B245429C71C0300CF7A76 /* kern_start.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_start.cpp; sourceTree = "<group>"; };
 		CE405EBA1E49DD7100AA0B3D /* kern_compression.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_compression.hpp; sourceTree = "<group>"; };
 		CE405EBB1E49DD7100AA0B3D /* kern_disasm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_disasm.hpp; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				1C748C2E1C21952C0024EED2 /* Info.plist */,
 				CEA03B5C20EE825A00BA842F /* kern_nvmf.cpp */,
 				CEA03B5D20EE825A00BA842F /* kern_nvmf.hpp */,
+				400A11BB29C76C450029ABD6 /* kern_stubs.cpp */,
 			);
 			path = NVMetalFixup;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				CEA03B5E20EE825A00BA842F /* kern_nvmf.cpp in Sources */,
 				403B245529C71C0300CF7A76 /* kern_start.cpp in Sources */,
 				CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */,
+				400A11BC29C76C450029ABD6 /* kern_stubs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
