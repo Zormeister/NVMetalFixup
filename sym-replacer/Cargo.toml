@@ -1,0 +1,18 @@
+[package]
+name = "sym-replacer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+goblin = "0.6.0"
+log = { version = "0.4.17", features = [
+    "release_max_level_debug",
+    "max_level_trace",
+] }
+simple_logger = { version = "4.0.0", features = [
+    "nightly",
+    "stderr",
+    "threads",
+    "colored",
+    "colors",
+], default-features = false }

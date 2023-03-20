@@ -37,7 +37,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             {"__ZTV22IOGraphicsAccelerator2", this->orgIOGraphicsAccelVTable},
         };
         PANIC_COND(!patcher.solveMultiple(index, requests, address, size), "nvmf",
-            "Failed to solve IOAccelFamily2 symbols");
+            "Failed to solve IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
         mach_vm_address_t *orgNVStatisticsVTable {nullptr}, *orgNVCommandQueueVTable {nullptr},
             *orgNVAccelParent {nullptr};
