@@ -40,12 +40,12 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             "Failed to solve IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
         mach_vm_address_t *orgNVStatisticsVTable {nullptr}, *orgNVCommandQueueVTable {nullptr},
-            *orgNVAccelParent {nullptr};
+            *orgNVAccelParentVTable {nullptr};
 
         KernelPatcher::SolveRequest requests[] = {
             {"__ZTV12nvStatistics", orgNVStatisticsVTable},
             {"__ZTV14nvCommandQueue", orgNVCommandQueueVTable},
-            {"__ZTV19nvAcceleratorParent", orgNVAccelParent},
+            {"__ZTV19nvAcceleratorParent", orgNVAccelParentVTable},
         };
         PANIC_COND(!patcher.solveMultiple(index, requests, address, size), "nvmf",
             "Failed to solve GeForceWeb symbols");
@@ -56,6 +56,6 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
         memcpy(orgNVStatisticsVTable + 39, callback->orgIOAccelStatisticsVTable + 39, sizeof(mach_vm_address_t) * 4);
         memcpy(orgNVCommandQueueVTable + 325, callback->orgIOAccelCommandQueueVTable + 325,
             sizeof(mach_vm_address_t) * 2);
-        memcpy(orgNVCommandQueueVTable + 340, callback->orgIOAccelCommandQueueVTable + 340, sizeof(mach_vm_address_t));
+        memcpy(orgNVAccelParentVTable + 340, callback->orgIOGraphicsAccelVTable + 340, sizeof(mach_vm_address_t));
     }
 }
