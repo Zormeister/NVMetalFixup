@@ -3,9 +3,7 @@
 
 #include "kern_nvmf.hpp"
 #include <Headers/kern_api.hpp>
-#include <Headers/kern_version.hpp>
 #include <Headers/plugin_start.hpp>
-#include <IOKit/IOCatalogue.h>
 
 static NVMF nvmf;
 
@@ -24,7 +22,7 @@ static const char *bootargBeta[] = {
 PluginConfiguration ADDPR(config) {
     xStringify(PRODUCT_NAME),
     parseModuleVersion(xStringify(MODULE_VERSION)),
-    LiluAPI::AllowNormal | LiluAPI::AllowInstallerRecovery | LiluAPI::AllowSafeMode,
+    LiluAPI::AllowNormal | LiluAPI::AllowSafeMode,
     bootargOff,
     arrsize(bootargOff),
     bootargDebug,
@@ -32,6 +30,6 @@ PluginConfiguration ADDPR(config) {
     bootargBeta,
     arrsize(bootargBeta),
     KernelVersion::Mojave,
-    KernelVersion::BigSur,
+    KernelVersion::Ventura,
     []() { nvmf.init(); },
 };

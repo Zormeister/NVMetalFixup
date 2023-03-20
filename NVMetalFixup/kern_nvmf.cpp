@@ -3,8 +3,6 @@
 
 #include "kern_nvmf.hpp"
 #include <Headers/kern_api.hpp>
-#include <Headers/kern_devinfo.hpp>
-#include <IOKit/IODeviceTreeSupport.h>
 
 static const char *pathIOAccelFamily2 =
     "/System/Library/Extensions/IOAcceleratorFamily2.kext/Contents/MacOS/IOAcceleratorFamily2";
@@ -34,58 +32,6 @@ void NVMF::init() {
 void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
     if (kextIOAccelFamily2.loadIndex == index) {
         KernelPatcher::SolveRequest requests[] = {
-            {"__"
-             "ZN16IOAccelResource222newResourceWithOptionsEP22IOGraphicsAccelerator2P14IOAccelShared215eIOAccelResTypey"
-             "jyPyj",
-                this->orgIOAccelResourceNewResourceWithOptions},
-            {"__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics4Ev",
-                this->orgIOAccelStatistics2_RESERVEDIOAccelStatistics4},
-            {"__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics4Ev",
-                this->orgIOAccelStatistics2_RESERVEDIOAccelStatistics4},
-            {"__ZN19IOAccelCommandQueue19retireCommandBufferEP17IOAccelEventFence",
-                this->orgIOAccelCommandQueueRetireCommandBuffer},
-            {"__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue3Ev",
-                this->orgIOAccelCommandQueue_RESERVEDIOAccelCommandQueue3},
-            {"__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue3Ev",
-                this->orgIOAccelCommandQueue_RESERVEDIOAccelCommandQueue2},
-            {"__ZN22IOGraphicsAccelerator231_RESERVEDIOGraphicsAccelerator1Ev",
-                this->orgIOGraphicsAccelerator_RESERVEDIOGraphicsAccelerator1},
-            {"__ZNK14IOAccelShared217lookupDeviceShmemEj", this->orgIOAccelSharedLookupDeviceShmem},
-            {"__ZNK15IOAccelContext215contextModeBitsEv", this->orgIOAccelContextContextModeBits},
-            {"__ZNK15IOAccelContext216isTripleBufferedEv", this->orgIOAccelContextIsTripleBuffered},
-            {"__ZNK15IOAccelContext217getSurfaceReqBitsEv", this->orgIOAccelContextGetSurfaceReqBits},
-            {"__ZNK15IOAccelContext219allowsExclusiveModeEv", this->orgIOAccelContextAllowsExclusiveMode},
-            {"__ZNK15IOAccelContext220requiresBackingStoreEv", this->orgIOAccelContextRequiresBackingStore},
-            {"__ZNK15IOAccelSurface216getSurfaceBufferE20eIOAccelGLBufferType",
-                this->orgIOAccelSurfaceGetSurfaceBuffer},
-            {"__ZNK15IOAccelSurface227convertGLIndexToBufferIndexE20eIOAccelGLBufferType",
-                this->orgIOAccelSurfaceConvertGLIndexToBufferIndex},
-            {"__ZNK16IOAccelResource213requirePageonEv", this->orgIOAccelResourceRequirePageon},
-            {"__ZNK16IOAccelResource224getClientSharedROPrivateEv", this->orgIOAccelResourceGetClientSharedROPrivate},
-            {"__ZNK16IOAccelResource224getClientSharedRWPrivateEv", this->orgIOAccelResourceGetClientSharedRWPrivate},
-            {"__ZNK16IOAccelSysMemory12getDirtySizeEv", this->orgIOAccelSysMemoryGetDirtySize},
-            {"__ZNK16IOAccelSysMemory15getResidentSizeEv", this->orgIOAccelSysMemoryGetResidentSize},
-            {"__ZNK16IOAccelVidMemory12getDirtySizeEv", this->orgIOAccelVidMemoryGetDirtySize},
-            {"__ZNK16IOAccelVidMemory15getResidentSizeEv", this->orgIOAccelVidMemoryGetResidentSize},
-            {"__ZNK17IOAccel2DContext217getSurfaceReqBitsEv", this->orgIOAccel2DContextGetSurfaceReqBits},
-            {"__ZNK17IOAccel2DContext219allowsExclusiveModeEv", this->orgIOAccel2DContextAllowsExclusiveMode},
-            {"__ZNK17IOAccelGLContext215contextModeBitsEv", this->orgIOAccelGLContext2ContextModeBits},
-            {"__ZNK17IOAccelGLContext216isTripleBufferedEv", this->orgIOAccelGLContextIsTripleBuffered},
-            {"__ZNK17IOAccelGLContext217getSurfaceReqBitsEv", this->orgIOAccelGLContextGetSurfaceReqBits},
-            {"__ZNK17IOAccelGLContext219allowsExclusiveModeEv", this->orgIOAccelGLContextAllowsExclusiveMode},
-            {"__ZNK17IOAccelGLContext220requiresBackingStoreEv", this->orgIOAccelGLContext2RequiresBackingStore},
-            {"__ZNK19IOAccelDisplayPipe214getFramebufferEv", this->orgIOAccelDisplayPipeGetFramebuffer},
-            {"__ZNK19IOAccelDisplayPipe218getScanoutResourceEj", this->orgIOAccelDisplayPipeGetScanoutResource},
-            {"__ZNK22IOAccelDisplayMachine214getDisplayPipeEj", this->orgIOAccelDisplayMachine2GetDisplayPipe},
-            {"__ZNK22IOAccelDisplayMachine216getIOFramebufferEj", this->orgIOAccelDisplayMachineGetIOFramebuffer},
-            {"__ZNK22IOAccelDisplayMachine217getScanoutSurfaceEj", this->orgIOAccelDisplayMachineGetScanoutSurface},
-            {"__ZNK22IOAccelDisplayMachine219getFramebufferCountEv", this->orgIOAccelDisplayMachineGetFramebufferCount},
-            {"__ZNK22IOAccelDisplayMachine219isFramebufferActiveEj",
-                this->orgIOAccelDisplayMachine2IsFramebufferActive},
-            {"__ZNK22IOAccelDisplayMachine220getFullScreenSurfaceEj",
-                this->orgIOAccelDisplayMachine2GetFullScreenSurface},
-            {"__ZNK22IOAccelDisplayMachine222getFramebufferResourceEjj",
-                this->orgIOAccelDisplayMachineGetFramebufferResource},
             {"__ZTV18IOAccelStatistics2", this->orgIOAccelStatisticsVTable},
             {"__ZTV19IOAccelCommandQueue", this->orgIOAccelCommandQueueVTable},
             {"__ZTV22IOGraphicsAccelerator2", this->orgIOGraphicsAccelVTable},
