@@ -56,7 +56,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             {"__ZTV14nvCommandQueue", orgNVCommandQueueVTable},
             {"__ZTV19nvAcceleratorParent", orgNVAccelParentVTable},
         };
-        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size, true, true), "nvmf",
+        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
             "Failed to solve GeForceWeb symbols");
 
         /**
