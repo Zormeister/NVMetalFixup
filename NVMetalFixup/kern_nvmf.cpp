@@ -31,23 +31,32 @@ void NVMF::init() {
 
 void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
     if (kextIOAccelFamily2.loadIndex == index) {
-        KernelPatcher::SolveRequest requests[] = {
+        KernelPatcher::SolveRequest solveRequests[] = {
             {"__ZTV18IOAccelStatistics2", this->orgIOAccelStatisticsVTable},
             {"__ZTV19IOAccelCommandQueue", this->orgIOAccelCommandQueueVTable},
             {"__ZTV22IOGraphicsAccelerator2", this->orgIOGraphicsAccelVTable},
         };
-        PANIC_COND(!patcher.solveMultiple(index, requests, address, size), "nvmf",
+        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
             "Failed to solve IOAcceleratorFamily2 symbols");
+
+        KernelPatcher::RouteRequest requests[] = {
+            {"__"
+             "ZN16IOAccelResource222newResourceWithOptionsEP22IOGraphicsAccelerator2P14IOAccelShared215eIOAccelResTypey"
+             "jyPyj",
+                wrapNewResourceWithOptions, this->orgNewResourceWithOptions},
+        };
+        PANIC_COND(!patcher.routeMultiple(index, requests, address, size), "nvmf",
+            "Failed to route IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
         mach_vm_address_t *orgNVStatisticsVTable {nullptr}, *orgNVCommandQueueVTable {nullptr},
             *orgNVAccelParentVTable {nullptr};
 
-        KernelPatcher::SolveRequest requests[] = {
+        KernelPatcher::SolveRequest solveRequests[] = {
             {"__ZTV12nvStatistics", orgNVStatisticsVTable},
             {"__ZTV14nvCommandQueue", orgNVCommandQueueVTable},
             {"__ZTV19nvAcceleratorParent", orgNVAccelParentVTable},
         };
-        PANIC_COND(!patcher.solveMultiple(index, requests, address, size), "nvmf",
+        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
             "Failed to solve GeForceWeb symbols");
 
         /**
@@ -58,4 +67,10 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             sizeof(mach_vm_address_t) * 2);
         memcpy(orgNVAccelParentVTable + 340, callback->orgIOGraphicsAccelVTable + 340, sizeof(mach_vm_address_t));
     }
+}
+
+void *NVMF::wrapNewResourceWithOptions(void *accel, void *accelShared, uint32_t resType, IOByteCount count,
+    IOOptionBits options, IOByteCount param6, mach_vm_address_t *param7) {
+    return reinterpret_cast<t_newResourceWithOptionsNew>(callback->orgNewResourceWithOptions)(accel, accelShared,
+        resType, count, options, param6, param7, 0);    // Apple added a namespace ID parameter.
 }

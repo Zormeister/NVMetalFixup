@@ -5,6 +5,9 @@
 #define kern_nvmf_hpp
 #include <Headers/kern_patcher.hpp>
 
+using t_newResourceWithOptionsNew = void *(*)(void *accel, void *accelShared, uint32_t resType, IOByteCount count,
+    IOOptionBits options, IOByteCount param6, mach_vm_address_t *param7, uint32_t namespaceId);
+
 class NVMF {
     public:
     static NVMF *callback;
@@ -17,6 +20,10 @@ class NVMF {
     mach_vm_address_t *orgIOAccelStatisticsVTable {nullptr};
     mach_vm_address_t *orgIOAccelCommandQueueVTable {nullptr};
     mach_vm_address_t *orgIOGraphicsAccelVTable {nullptr};
+
+    mach_vm_address_t orgNewResourceWithOptions {0};
+    static void *wrapNewResourceWithOptions(void *accel, void *accelShared, uint32_t resType, IOByteCount count,
+        IOOptionBits options, IOByteCount param6, mach_vm_address_t *param7);
 };
 
 #endif /* kern_nvmf.hpp */
