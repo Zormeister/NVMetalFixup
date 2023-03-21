@@ -30,6 +30,8 @@ void NVMF::init() {
 }
 
 void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
+    patcher.clearError();
+
     if (kextIOAccelFamily2.loadIndex == index) {
         KernelPatcher::SolveRequest solveRequests[] = {
             {"__ZTV18IOAccelStatistics2", this->orgIOAccelStatisticsVTable},
