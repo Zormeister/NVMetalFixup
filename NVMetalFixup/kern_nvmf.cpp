@@ -80,6 +80,8 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
 
 void *NVMF::wrapNewResourceWithOptions(void *accel, void *accelShared, uint32_t resType, IOByteCount count,
     IOOptionBits options, IOByteCount param6, mach_vm_address_t *param7) {
-    return reinterpret_cast<t_newResourceWithOptionsNew>(callback->orgNewResourceWithOptions)(accel, accelShared,
+    auto *ret = reinterpret_cast<t_newResourceWithOptionsNew>(callback->orgNewResourceWithOptions)(accel, accelShared,
         resType, count, options, param6, param7, 0);    // Apple added a namespace ID parameter.
+    DBGLOG("nvmf", "newResourceWithOptions << %p", ret);
+    return ret;
 }
