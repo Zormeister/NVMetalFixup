@@ -62,7 +62,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
         /**
          * Apple added a few new methods. This is fine; they added them over their _RESERVED placeholders.
          */
-        PANIC_COND(!MachInfo::setKernelWriting(true, KernelPatcher::kernelWriteLock), "nvmf",
+        PANIC_COND(MachInfo::setKernelWriting(true, KernelPatcher::kernelWriteLock) != KERN_SUCCESS, "nvmf",
             "Failed to enable kernel writing");
         memcpy(orgNVStatisticsVTable + 39, callback->orgIOAccelStatisticsVTable + 39, sizeof(mach_vm_address_t) * 4);
         memcpy(orgNVCommandQueueVTable + 325, callback->orgIOAccelCommandQueueVTable + 325,
