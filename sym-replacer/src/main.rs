@@ -53,7 +53,7 @@ fn main() {
         ("__ZN15IOAccelSurface216getSurfaceBufferE20eIOAccelGLBufferType", "__ZNK15IOAccelSurface216getSurfaceBufferE20eIOAccelGLBufferType"),
         ("__ZN15IOAccelSurface227convertGLIndexToBufferIndexE20eIOAccelGLBufferType", "__ZNK15IOAccelSurface227convertGLIndexToBufferIndexE20eIOAccelGLBufferType"),
         ("__ZN16IOAccelResource213requirePageonEv", "__ZNK16IOAccelResource213requirePageonEv"),
-        ("__ZN16IOAccelResource222newResourceWithOptionsEP22IOGraphicsAccelerator2P14IOAccelShared215eIOAccelResTypeyjyPy", "__ZN16IOAccelResource222newResourceWithOptionsEP22IOGraphicsAccelerator2P14IOAccelShared215eIOAccelResTypeyjyPy"),
+        ("__ZN16IOAccelResource222newResourceWithOptionsEP22IOGraphicsAccelerator2P14IOAccelShared215eIOAccelResTypeyjyPy", "__ZN16IOAccelResource222newResourceWithOptionsEP22IOGraphicsAccelerator2P14IOAccelShared215eIOAccelResTypeyjyPyj"),
         ("__ZN16IOAccelResource224getClientSharedROPrivateEv", "__ZNK15IOAccelSurface227convertGLIndexToBufferIndexE20eIOAccelGLBufferType"),
         ("__ZN16IOAccelResource224getClientSharedRWPrivateEv", "__ZNK16IOAccelResource224getClientSharedRWPrivateEv"),
         ("__ZN16IOAccelSysMemory12getDirtySizeEv", "__ZNK16IOAccelSysMemory12getDirtySizeEv"),
