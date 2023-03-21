@@ -36,7 +36,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             {"__ZTV19IOAccelCommandQueue", this->orgIOAccelCommandQueueVTable},
             {"__ZTV22IOGraphicsAccelerator2", this->orgIOGraphicsAccelVTable},
         };
-        SYSLOG_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
+        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
             "Failed to solve IOAcceleratorFamily2 symbols");
 
         KernelPatcher::RouteRequest requests[] = {
@@ -45,7 +45,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
              "jyPyj",
                 wrapNewResourceWithOptions, this->orgNewResourceWithOptions},
         };
-        SYSLOG_COND(!patcher.routeMultipleLong(index, requests, address, size), "nvmf",
+        PANIC_COND(!patcher.routeMultipleLong(index, requests, address, size), "nvmf",
             "Failed to route IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
         mach_vm_address_t *orgNVStatisticsVTable {nullptr}, *orgNVCommandQueueVTable {nullptr},
@@ -56,25 +56,19 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             {"__ZTV14nvCommandQueue", orgNVCommandQueueVTable},
             {"__ZTV19nvAcceleratorParent", orgNVAccelParentVTable},
         };
-        SYSLOG_COND(!patcher.solveMultiple(index, solveRequests, address, size, true, true), "nvmf",
+        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size, true, true), "nvmf",
             "Failed to solve GeForceWeb symbols");
 
         /**
          * Apple added a few new methods. This is fine; they added them over their _RESERVED placeholders.
          */
-        if (orgNVStatisticsVTable && callback->orgIOAccelStatisticsVTable) {
-            DBGLOG("nvmf", "Patching nvStatistics VTable");
-            memcpy(orgNVStatisticsVTable + 39, callback->orgIOAccelStatisticsVTable + 39, sizeof(mach_vm_address_t) * 4);
-        }
-        if (orgNVCommandQueueVTable && callback->orgIOAccelCommandQueueVTable) {
-            DBGLOG("nvmf", "Patching nvCommandQueue VTable");
-            memcpy(orgNVCommandQueueVTable + 325, callback->orgIOAccelCommandQueueVTable + 325,
+        PANIC_COND(!MachInfo::setKernelWriting(true, KernelPatcher::kernelWriteLock), "nvmf",
+            "Failed to enable kernel writing");
+        memcpy(orgNVStatisticsVTable + 39, callback->orgIOAccelStatisticsVTable + 39, sizeof(mach_vm_address_t) * 4);
+        memcpy(orgNVCommandQueueVTable + 325, callback->orgIOAccelCommandQueueVTable + 325,
             sizeof(mach_vm_address_t) * 2);
-        }
-        if (orgNVAccelParentVTable && callback->orgIOGraphicsAccelVTable) {
-            DBGLOG("nvmf", "Patching nvAcceleratorParent VTable");
-            memcpy(orgNVAccelParentVTable + 340, callback->orgIOGraphicsAccelVTable + 340, sizeof(mach_vm_address_t));
-        }
+        memcpy(orgNVAccelParentVTable + 340, callback->orgIOGraphicsAccelVTable + 340, sizeof(mach_vm_address_t));
+        MachInfo::setKernelWriting(false, KernelPatcher::kernelWriteLock);
     }
 }
 
