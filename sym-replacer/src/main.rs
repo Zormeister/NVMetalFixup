@@ -35,11 +35,10 @@ fn main() {
         .load_commands
         .iter()
         .find_map(|cmd| {
-            if let CommandVariant::Symtab(v) = cmd.command {
-                Some((cmd.offset, v.nsyms as usize, v.symoff as usize))
-            } else {
-                None
-            }
+            let CommandVariant::Symtab(v) = cmd.command else {
+                return None;
+            };
+            Some((cmd.offset, v.nsyms as usize, v.symoff as usize))
         })
         .unwrap();
 
