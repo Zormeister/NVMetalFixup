@@ -8,15 +8,15 @@
 static NVMF nvmf;
 
 static const char *bootargOff[] = {
-    "-nredoff",
+    "-nvmfoff",
 };
 
 static const char *bootargDebug[] = {
-    "-nreddbg",
+    "-nvmfdbg",
 };
 
 static const char *bootargBeta[] = {
-    "-nredbeta",
+    "-nvmfbeta",
 };
 
 PluginConfiguration ADDPR(config) {
