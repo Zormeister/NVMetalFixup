@@ -8,12 +8,12 @@ static const char *pathIOAccelFamily2 =
     "/System/Library/Extensions/IOAcceleratorFamily2.kext/Contents/MacOS/IOAcceleratorFamily2";
 static const char *pathGeForceWeb = "/System/Library/Extensions/GeForceWeb.kext/Contents/MacOS/GeForceWeb";
 
-static KernelPatcher::KextInfo kextIOAccelFamily2 {"com.apple.iokit.IOAcceleratorFamily2", &pathIOAccelFamily2, 1, {},
-    {}, KernelPatcher::KextInfo::Unloaded};
+static KernelPatcher::KextInfo kextIOAcceleratorFamily2 {"com.apple.iokit.IOAcceleratorFamily2", &pathIOAccelFamily2, 1,
+    {}, {}, KernelPatcher::KextInfo::Unloaded};
 static KernelPatcher::KextInfo kextGeForceWeb {"com.nvidia.web.GeForceWeb", &pathGeForceWeb, 1, {}, {},
     KernelPatcher::KextInfo::Unloaded};
 
-NVMF *NVMF::callback {nullptr};
+NVMF *NVMF::callback = nullptr;
 
 void NVMF::init() {
     callback = this;
@@ -25,12 +25,12 @@ void NVMF::init() {
             static_cast<NVMF *>(user)->processKext(patcher, index, address, size);
         },
         this);
-    lilu.onKextLoadForce(&kextIOAccelFamily2);
+    lilu.onKextLoadForce(&kextIOAcceleratorFamily2);
     lilu.onKextLoadForce(&kextGeForceWeb);
 }
 
 void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
-    if (kextIOAccelFamily2.loadIndex == index) {
+    if (kextIOAcceleratorFamily2.loadIndex == index) {
         KernelPatcher::SolveRequest solveRequests[] = {
             {"__ZTV18IOAccelStatistics2", this->orgIOAccelStatisticsVTable},
             {"__ZTV19IOAccelCommandQueue", this->orgIOAccelCommandQueueVTable},
