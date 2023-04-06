@@ -94,9 +94,9 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
         memcpy(orgNVAccelParentVTable + 340, callback->orgIOGraphicsAccelVTable + 340, sizeof(mach_vm_address_t));
         MachInfo::setKernelWriting(false, KernelPatcher::kernelWriteLock);
     } else if (kextNVDAStartupWeb.loadIndex == index) {
-        KernelPatcher::RouteRequest request("__ZN14NVDAStartupWeb5probeEP9IOServicePi", wrapStartupWebProbe,
-            orgStartupWebProbe);
-        PANIC_COND(patcher.routeMultiple(index, &request, 1, address, size) != KERN_SUCCESS, "nvmf",
+        KernelPatcher::RouteRequest request {"__ZN14NVDAStartupWeb5probeEP9IOServicePi", wrapStartupWebProbe,
+            orgStartupWebProbe};
+        DBGLOG_COND(patcher.routeMultiple(index, &request, 1, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route NVDAStartupWeb symbols");
     } else if (kextIONDRVSupport.loadIndex == index) {
         KernelPatcher::RouteRequest request {"__ZN17IONDRVFramebuffer10_doControlEPS_jPv", wrapNdrvDoControl,
