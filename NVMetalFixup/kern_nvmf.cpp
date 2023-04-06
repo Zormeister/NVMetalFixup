@@ -88,10 +88,11 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
          */
         PANIC_COND(MachInfo::setKernelWriting(true, KernelPatcher::kernelWriteLock) != KERN_SUCCESS, "nvmf",
             "Failed to enable kernel writing");
-        memcpy(orgNVStatisticsVTable + 39, callback->orgIOAccelStatisticsVTable + 39, sizeof(mach_vm_address_t) * 4);
-        memcpy(orgNVCommandQueueVTable + 325, callback->orgIOAccelCommandQueueVTable + 325,
+        memcpy(orgNVStatisticsVTable + 0x28, callback->orgIOAccelStatisticsVTable + 0x28,
+            sizeof(mach_vm_address_t) * 4);
+        memcpy(orgNVCommandQueueVTable + 0x145, callback->orgIOAccelCommandQueueVTable + 0x145,
             sizeof(mach_vm_address_t) * 2);
-        memcpy(orgNVAccelParentVTable + 340, callback->orgIOGraphicsAccelVTable + 340, sizeof(mach_vm_address_t));
+        memcpy(orgNVAccelParentVTable + 0x154, callback->orgIOGraphicsAccelVTable + 0x154, sizeof(mach_vm_address_t));
         MachInfo::setKernelWriting(false, KernelPatcher::kernelWriteLock);
     } else if (kextNVDAStartupWeb.loadIndex == index) {
         KernelPatcher::RouteRequest request {"__ZN14NVDAStartupWeb5probeEP9IOServicePi", wrapStartupWebProbe,
