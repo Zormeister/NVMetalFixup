@@ -99,9 +99,9 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
         PANIC_COND(patcher.routeMultiple(index, &request, 1, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route NVDAStartupWeb symbols");
     } else if (kextIONDRVSupport.loadIndex == index) {
-        KernelPatcher::RouteRequest request("__ZN17IONDRVFramebuffer10_doControlEPS_jPv", wrapNdrvDoControl,
-            orgNdrvDoControl);
-        PANIC_COND(patcher.routeMultiple(index, &request, 1, address, size) != KERN_SUCCESS, "nvmf",
+        KernelPatcher::RouteRequest request {"__ZN17IONDRVFramebuffer10_doControlEPS_jPv", wrapNdrvDoControl,
+            orgNdrvDoControl};
+        DBGLOG_COND(patcher.routeMultiple(index, &request, 1, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route IONDRVSupport symbols");
     }
 }
