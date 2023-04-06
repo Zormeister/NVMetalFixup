@@ -26,15 +26,6 @@ class NVMF {
     mach_vm_address_t orgNewResourceWithOptions {0};
     static void *wrapNewResourceWithOptions(void *accel, void *accelShared, uint32_t resType, IOByteCount count,
         IOOptionBits options, IOByteCount param6, mach_vm_address_t *param7, uint32_t namespaceId);
-
-    mach_vm_address_t orgSetAccelPropertiesWeb {0};
-    static void wrapSetAccelPropertiesWeb(IOService *that);
-
-    mach_vm_address_t orgStartupWebProbe {0};
-    static IOService *wrapStartupWebProbe(IOService *that, IOService *provider, SInt32 *score);
-
-    mach_vm_address_t orgNdrvDoControl {0};
-    static IOReturn wrapNdrvDoControl(IONDRVFramebuffer *fb, UInt32 code, void *params);
 };
 
 #endif /* kern_nvmf.hpp */
