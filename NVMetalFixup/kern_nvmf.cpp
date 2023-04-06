@@ -62,7 +62,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
              "jyPyj",
                 wrapNewResourceWithOptions, this->orgNewResourceWithOptions},
         };
-        PANIC_COND(!patcher.routeMultiple(index, requests, address, size), "nvmf",
+        PANIC_COND(patcher.routeMultipleLong(index, requests, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
         mach_vm_address_t *orgNVStatisticsVTable = nullptr, *orgNVCommandQueueVTable = nullptr,
@@ -80,7 +80,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
             {"__ZN19nvAcceleratorParent18SetAccelPropertiesEv", wrapSetAccelPropertiesWeb,
                 this->orgSetAccelPropertiesWeb},
         };
-        PANIC_COND(!patcher.routeMultiple(index, requests, address, size), "nvmf",
+        PANIC_COND(patcher.routeMultipleLong(index, requests, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route GeForceWeb symbols");
 
         /**
