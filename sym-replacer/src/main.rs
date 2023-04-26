@@ -66,13 +66,13 @@ fn main() {
         ("__ZN17IOAccelGLContext217getSurfaceReqBitsEv", "__ZNK17IOAccelGLContext217getSurfaceReqBitsEv"),
         ("__ZN17IOAccelGLContext219allowsExclusiveModeEv", "__ZNK17IOAccelGLContext219allowsExclusiveModeEv"),
         ("__ZN17IOAccelGLContext220requiresBackingStoreEv", "__ZNK17IOAccelGLContext220requiresBackingStoreEv"),
-        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics0Ev", "__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics4Ev"),
-        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics1Ev", "__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics4Ev"),
-        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics2Ev", "__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics4Ev"),
-        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics3Ev", "__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics4Ev"),
+        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics0Ev", "__ZN18IOAccelStatistics216setupIOReportersEv"),
+        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics1Ev", "__ZN18IOAccelStatistics213setupChannelsEv"),
+        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics2Ev", "__ZN18IOAccelStatistics215configureReportEP19IOReportChannelListjPvS2_"),
+        ("__ZN18IOAccelStatistics227_RESERVEDIOAccelStatistics3Ev", "__ZN18IOAccelStatistics212updateReportEP19IOReportChannelListjPvS2_"),
         ("__ZN19IOAccelCommandQueue19retireCommandBufferEP17IOAccelBlockFence", "__ZN19IOAccelCommandQueue19retireCommandBufferEP17IOAccelEventFence"),
-        ("__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue1Ev", "__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue3Ev"),
-        ("__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue2Ev", "__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue3Ev"),
+        ("__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue1Ev", "__ZN19IOAccelCommandQueue21processKernelCommandsEPK20IOAccelKernelCommandS2_"),
+        ("__ZN19IOAccelCommandQueue29_RESERVEDIOAccelCommandQueue2Ev", "__ZN19IOAccelCommandQueue20processKernelCommandEPK20IOAccelKernelCommandS2_"),
         ("__ZN19IOAccelDisplayPipe214getFramebufferEv", "__ZNK19IOAccelDisplayPipe214getFramebufferEv"),
         ("__ZN22IOAccelDisplayMachine214getDisplayPipeEj", "__ZNK22IOAccelDisplayMachine214getDisplayPipeEj"),
         ("__ZN22IOAccelDisplayMachine216getIOFramebufferEj", "__ZNK22IOAccelDisplayMachine216getIOFramebufferEj"),
@@ -82,7 +82,7 @@ fn main() {
         ("__ZN22IOAccelDisplayMachine219isFramebufferActiveEj", "__ZNK22IOAccelDisplayMachine219isFramebufferActiveEj"),
         ("__ZN22IOAccelDisplayMachine220getFullScreenSurfaceEj", "__ZNK22IOAccelDisplayMachine220getFullScreenSurfaceEj"),
         ("__ZN22IOAccelDisplayMachine222getFramebufferResourceEjj", "__ZNK22IOAccelDisplayMachine222getFramebufferResourceEjj"),
-        ("__ZN22IOGraphicsAccelerator231_RESERVEDIOGraphicsAccelerator0Ev", "__ZN22IOGraphicsAccelerator231_RESERVEDIOGraphicsAccelerator1Ev"),
+        ("__ZN22IOGraphicsAccelerator231_RESERVEDIOGraphicsAccelerator0Ev", "__ZN22IOGraphicsAccelerator218getMaxResourceSizeEv"),
     ]);
 
     let mut new_str_table = vec![0u8; 4];

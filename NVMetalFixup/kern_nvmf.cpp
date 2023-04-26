@@ -34,14 +34,6 @@ void NVMF::init() {
 
 void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
     if (kextIOAcceleratorFamily2.loadIndex == index) {
-        KernelPatcher::SolveRequest solveRequests[] = {
-            {"__ZTV18IOAccelStatistics2", this->orgIOAccelStatisticsVTable},
-            {"__ZTV19IOAccelCommandQueue", this->orgIOAccelCommandQueueVTable},
-            {"__ZTV22IOGraphicsAccelerator2", this->orgIOGraphicsAccelVTable},
-        };
-        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
-            "Failed to solve IOAcceleratorFamily2 symbols");
-
         KernelPatcher::RouteRequest requests[] = {
             {"__ZN24IOAccelSharedUserClient212new_resourceEP22IOAccelNewResourceArgsP28IOAccelNewResourceReturnDatayPj",
                 wrapSharedUCNewResource, this->orgSharedUCNewResource},
@@ -54,29 +46,6 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
         PANIC_COND(patcher.routeMultipleLong(index, requests, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
-        mach_vm_address_t *orgNVStatisticsVTable = nullptr, *orgNVCommandQueueVTable = nullptr,
-                          *orgNVAccelParentVTable = nullptr;
-
-        KernelPatcher::SolveRequest solveRequests[] = {
-            {"__ZTV12nvStatistics", orgNVStatisticsVTable},
-            {"__ZTV14nvCommandQueue", orgNVCommandQueueVTable},
-            {"__ZTV19nvAcceleratorParent", orgNVAccelParentVTable},
-        };
-        patcher.clearError();
-        PANIC_COND(!patcher.solveMultiple(index, solveRequests, address, size), "nvmf",
-            "Failed to solve GeForceWeb symbols");
-
-        /**
-         * Apple added a few new methods. This is fine; they added them over their _RESERVED placeholders.
-         */
-        PANIC_COND(MachInfo::setKernelWriting(true, KernelPatcher::kernelWriteLock) != KERN_SUCCESS, "nvmf",
-            "Failed to enable kernel writing");
-        memcpy(orgNVStatisticsVTable + 0x28, callback->orgIOAccelStatisticsVTable + 0x28,
-            sizeof(mach_vm_address_t) * 4);
-        memcpy(orgNVCommandQueueVTable + 0x145, callback->orgIOAccelCommandQueueVTable + 0x145,
-            sizeof(mach_vm_address_t) * 2);
-        memcpy(orgNVAccelParentVTable + 0x154, callback->orgIOGraphicsAccelVTable + 0x154, sizeof(mach_vm_address_t));
-        MachInfo::setKernelWriting(false, KernelPatcher::kernelWriteLock);
     }
 }
 

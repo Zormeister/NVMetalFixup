@@ -16,10 +16,6 @@ class NVMF {
     private:
     void processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size);
 
-    mach_vm_address_t *orgIOAccelStatisticsVTable {nullptr};
-    mach_vm_address_t *orgIOAccelCommandQueueVTable {nullptr};
-    mach_vm_address_t *orgIOGraphicsAccelVTable {nullptr};
-
     mach_vm_address_t orgSharedUCNewResource {0};
     static void *wrapSharedUCNewResource(void *that, void *param1, void *param2, uint64_t param3, uint32_t *param4);
 
