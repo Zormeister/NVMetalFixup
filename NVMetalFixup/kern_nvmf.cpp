@@ -42,7 +42,7 @@ void NVMF::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t a
              "jyPyj",
                 wrapNewResourceWithOptions, this->orgNewResourceWithOptions},
         };
-     SYSLOG_COND(patcher.routeMultiple(index, requests, address, size) != KERN_SUCCESS, "nvmf",
+        SYSLOG_COND(patcher.routeMultiple(index, requests, address, size) != KERN_SUCCESS, "nvmf",
             "Failed to route IOAcceleratorFamily2 symbols");
     } else if (kextGeForceWeb.loadIndex == index) {
     }
