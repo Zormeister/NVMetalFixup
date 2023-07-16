@@ -4,14 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-goblin = "0.6.1"
-log = { version = "0.4.17", features = [
+goblin = "0.7.1"
+log = { version = "0.4.19", features = [
     "release_max_level_debug",
     "max_level_trace",
 ] }
 ron = "0.8.0"
-serde = { version = "1.0.160", features = ["derive"] }
-simple_logger = { version = "4.1.0", features = [
+serde = { version = "1.0.171", features = ["derive"] }
+simple_logger = { version = "4.2.0", features = [
     "stderr",
     "threads",
     "colored",
