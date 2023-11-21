@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		403B245529C71C0300CF7A76 /* kern_start.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 403B245429C71C0300CF7A76 /* kern_start.cpp */; };
+		403B245529C71C0300CF7A76 /* PluginStart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 403B245429C71C0300CF7A76 /* PluginStart.cpp */; };
 		CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE405ED81E4A080700AA0B3D /* plugin_start.cpp */; };
 		CE8DA0832517C41A008C44E8 /* libkmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE8DA0822517C41A008C44E8 /* libkmod.a */; };
-		CEA03B5E20EE825A00BA842F /* kern_nvmf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA03B5C20EE825A00BA842F /* kern_nvmf.cpp */; };
-		CEA03B5F20EE825A00BA842F /* kern_nvmf.hpp in Headers */ = {isa = PBXBuildFile; fileRef = CEA03B5D20EE825A00BA842F /* kern_nvmf.hpp */; };
+		CEA03B5E20EE825A00BA842F /* NWD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEA03B5C20EE825A00BA842F /* NWD.cpp */; };
+		CEA03B5F20EE825A00BA842F /* NWD.hpp in Headers */ = {isa = PBXBuildFile; fileRef = CEA03B5D20EE825A00BA842F /* NWD.hpp */; };
+		F0DF3B7D2B0CA4B2000523F4 /* PatcherPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */; };
+		F0DF3B7E2B0CA4B2000523F4 /* PatcherPlus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,9 +30,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1C748C271C21952C0024EED2 /* NVMetalFixup.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NVMetalFixup.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C748C271C21952C0024EED2 /* NootedWebDrivers.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NootedWebDrivers.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C748C2E1C21952C0024EED2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		403B245429C71C0300CF7A76 /* kern_start.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kern_start.cpp; sourceTree = "<group>"; };
+		403B245429C71C0300CF7A76 /* PluginStart.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PluginStart.cpp; sourceTree = "<group>"; };
 		CE405EBA1E49DD7100AA0B3D /* kern_compression.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_compression.hpp; sourceTree = "<group>"; };
 		CE405EBB1E49DD7100AA0B3D /* kern_disasm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_disasm.hpp; sourceTree = "<group>"; };
 		CE405EBC1E49DD7100AA0B3D /* kern_file.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_file.hpp; sourceTree = "<group>"; };
@@ -45,8 +47,11 @@
 		CE405ED81E4A080700AA0B3D /* plugin_start.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = plugin_start.cpp; sourceTree = "<group>"; };
 		CE405EDA1E4A080F00AA0B3D /* plugin_start.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = plugin_start.hpp; sourceTree = "<group>"; };
 		CE8DA0822517C41A008C44E8 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = ../Lilu/MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
-		CEA03B5C20EE825A00BA842F /* kern_nvmf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = kern_nvmf.cpp; sourceTree = "<group>"; };
-		CEA03B5D20EE825A00BA842F /* kern_nvmf.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = kern_nvmf.hpp; sourceTree = "<group>"; };
+		CEA03B5C20EE825A00BA842F /* NWD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NWD.cpp; sourceTree = "<group>"; };
+		CEA03B5D20EE825A00BA842F /* NWD.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NWD.hpp; sourceTree = "<group>"; };
+		F0DF3B7A2B0C92C6000523F4 /* GeForce.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GeForce.hpp; sourceTree = "<group>"; };
+		F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatcherPlus.cpp; sourceTree = "<group>"; };
+		F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatcherPlus.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +69,7 @@
 		1C748C1D1C21952C0024EED2 = {
 			isa = PBXGroup;
 			children = (
-				1C748C291C21952C0024EED2 /* NVMetalFixup */,
+				1C748C291C21952C0024EED2 /* NootedWebDrivers */,
 				CE405EC81E49DD7B00AA0B3D /* SDK */,
 				1C748C281C21952C0024EED2 /* Products */,
 				CE8DA0812517C41A008C44E8 /* Frameworks */,
@@ -75,20 +80,23 @@
 		1C748C281C21952C0024EED2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1C748C271C21952C0024EED2 /* NVMetalFixup.kext */,
+				1C748C271C21952C0024EED2 /* NootedWebDrivers.kext */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1C748C291C21952C0024EED2 /* NVMetalFixup */ = {
+		1C748C291C21952C0024EED2 /* NootedWebDrivers */ = {
 			isa = PBXGroup;
 			children = (
-				403B245429C71C0300CF7A76 /* kern_start.cpp */,
+				F0DF3B7A2B0C92C6000523F4 /* GeForce.hpp */,
 				1C748C2E1C21952C0024EED2 /* Info.plist */,
-				CEA03B5C20EE825A00BA842F /* kern_nvmf.cpp */,
-				CEA03B5D20EE825A00BA842F /* kern_nvmf.hpp */,
+				CEA03B5C20EE825A00BA842F /* NWD.cpp */,
+				CEA03B5D20EE825A00BA842F /* NWD.hpp */,
+				F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */,
+				F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */,
+				403B245429C71C0300CF7A76 /* PluginStart.cpp */,
 			);
-			path = NVMetalFixup;
+			path = NootedWebDrivers;
 			sourceTree = "<group>";
 		};
 		CE405EB91E49DD7100AA0B3D /* Headers */ = {
@@ -144,16 +152,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA03B5F20EE825A00BA842F /* kern_nvmf.hpp in Headers */,
+				F0DF3B7E2B0CA4B2000523F4 /* PatcherPlus.hpp in Headers */,
+				CEA03B5F20EE825A00BA842F /* NWD.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1C748C261C21952C0024EED2 /* NVMetalFixup */ = {
+		1C748C261C21952C0024EED2 /* NootedWebDrivers */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1C748C311C21952C0024EED2 /* Build configuration list for PBXNativeTarget "NVMetalFixup" */;
+			buildConfigurationList = 1C748C311C21952C0024EED2 /* Build configuration list for PBXNativeTarget "NootedWebDrivers" */;
 			buildPhases = (
 				1C748C221C21952C0024EED2 /* Sources */,
 				1C748C231C21952C0024EED2 /* Frameworks */,
@@ -165,9 +174,9 @@
 			);
 			dependencies = (
 			);
-			name = NVMetalFixup;
-			productName = NVMetalFixup;
-			productReference = 1C748C271C21952C0024EED2 /* NVMetalFixup.kext */;
+			name = NootedWebDrivers;
+			productName = NootedWebDrivers;
+			productReference = 1C748C271C21952C0024EED2 /* NootedWebDrivers.kext */;
 			productType = "com.apple.product-type.kernel-extension";
 		};
 /* End PBXNativeTarget section */
@@ -184,7 +193,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1C748C211C21952C0024EED2 /* Build configuration list for PBXProject "NVMetalFixup" */;
+			buildConfigurationList = 1C748C211C21952C0024EED2 /* Build configuration list for PBXProject "NootedWebDrivers" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -197,7 +206,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1C748C261C21952C0024EED2 /* NVMetalFixup */,
+				1C748C261C21952C0024EED2 /* NootedWebDrivers */,
 			);
 		};
 /* End PBXProject section */
@@ -224,9 +233,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA03B5E20EE825A00BA842F /* kern_nvmf.cpp in Sources */,
-				403B245529C71C0300CF7A76 /* kern_start.cpp in Sources */,
+				CEA03B5E20EE825A00BA842F /* NWD.cpp in Sources */,
+				403B245529C71C0300CF7A76 /* PluginStart.cpp in Sources */,
 				CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */,
+				F0DF3B7D2B0CA4B2000523F4 /* PatcherPlus.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,16 +384,17 @@
 					"MODULE_VERSION=$(MODULE_VERSION)",
 					"PRODUCT_NAME=$(PRODUCT_NAME)",
 					"APPLE_KEXT_ASSERTIONS=1",
+					"LILU_CUSTOM_IOKIT_INIT=1",
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = NVMetalFixup/Info.plist;
+				INFOPLIST_FILE = NootedWebDrivers/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MODULE_NAME = com.ChefKissInc.NVMetalFixup;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULE_NAME = com.ChefKissInc.NootedWebDrivers;
 				MODULE_START = "$(PRODUCT_NAME)_kern_start";
 				MODULE_STOP = "$(PRODUCT_NAME)_kern_stop";
 				MODULE_VERSION = 1.0.0;
@@ -404,7 +415,7 @@
 					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-static";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(MODULE_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ChefKissInc.NootedWebDrivers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = kext;
@@ -427,16 +438,17 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"MODULE_VERSION=$(MODULE_VERSION)",
 					"PRODUCT_NAME=$(PRODUCT_NAME)",
+					"LILU_CUSTOM_IOKIT_INIT=1",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = NVMetalFixup/Info.plist;
+				INFOPLIST_FILE = NootedWebDrivers/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
 				);
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MODULE_NAME = com.ChefKissInc.NVMetalFixup;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULE_NAME = com.ChefKissInc.NootedWebDrivers;
 				MODULE_START = "$(PRODUCT_NAME)_kern_start";
 				MODULE_STOP = "$(PRODUCT_NAME)_kern_stop";
 				MODULE_VERSION = 1.0.0;
@@ -457,7 +469,7 @@
 					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-static";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(MODULE_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ChefKissInc.NootedWebDrivers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_STYLE = "non-global";
 				WRAPPER_EXTENSION = kext;
@@ -539,16 +551,17 @@
 					"MODULE_VERSION=$(MODULE_VERSION)",
 					"APPLE_KEXT_ASSERTIONS=1",
 					"PRODUCT_NAME=$(PRODUCT_NAME)",
+					"LILU_CUSTOM_IOKIT_INIT=1",
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = NVMetalFixup/Info.plist;
+				INFOPLIST_FILE = NootedWebDrivers/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MacKernelSDK/Library/x86_64",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MODULE_NAME = com.ChefKissInc.NVMetalFixup;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULE_NAME = com.ChefKissInc.NootedWebDrivers;
 				MODULE_START = "$(PRODUCT_NAME)_kern_start";
 				MODULE_STOP = "$(PRODUCT_NAME)_kern_stop";
 				MODULE_VERSION = 1.0.0;
@@ -571,7 +584,7 @@
 					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-static";
-				PRODUCT_BUNDLE_IDENTIFIER = "$(MODULE_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ChefKissInc.NootedWebDrivers;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = kext;
 			};
@@ -580,7 +593,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1C748C211C21952C0024EED2 /* Build configuration list for PBXProject "NVMetalFixup" */ = {
+		1C748C211C21952C0024EED2 /* Build configuration list for PBXProject "NootedWebDrivers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C748C2F1C21952C0024EED2 /* Debug */,
@@ -590,7 +603,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1C748C311C21952C0024EED2 /* Build configuration list for PBXNativeTarget "NVMetalFixup" */ = {
+		1C748C311C21952C0024EED2 /* Build configuration list for PBXNativeTarget "NootedWebDrivers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C748C321C21952C0024EED2 /* Debug */,
