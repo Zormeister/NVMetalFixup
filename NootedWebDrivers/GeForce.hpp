@@ -13,7 +13,7 @@ class nvPushBuffer : public OSObject {
 	
 	// Ghidra froze, I'll fill it in eventually.
 	virtual void free() APPLE_KEXT_OVERRIDE;
-	virtual bool init(void *interface, void *accel, UInt32 space); // ?
+	virtual bool init(class nvSomethingInterface *interface, class nvAcceleratorParent *accel, UInt32 space); // ?
 	// CreateContext...
 	// AssertMapped...
 	virtual bool AllocateMemory(UInt32 space) = 0; // Pure-virtual function

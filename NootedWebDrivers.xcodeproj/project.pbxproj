@@ -14,6 +14,8 @@
 		CEA03B5F20EE825A00BA842F /* NWD.hpp in Headers */ = {isa = PBXBuildFile; fileRef = CEA03B5D20EE825A00BA842F /* NWD.hpp */; };
 		F0DF3B7D2B0CA4B2000523F4 /* PatcherPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */; };
 		F0DF3B7E2B0CA4B2000523F4 /* PatcherPlus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */; };
+		F0F1010A2B0D3CB700C2AC0A /* Pascal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0F101082B0D3CB600C2AC0A /* Pascal.cpp */; };
+		F0F1010B2B0D3CB700C2AC0A /* Pascal.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0F101092B0D3CB600C2AC0A /* Pascal.hpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +54,8 @@
 		F0DF3B7A2B0C92C6000523F4 /* GeForce.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GeForce.hpp; sourceTree = "<group>"; };
 		F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatcherPlus.cpp; sourceTree = "<group>"; };
 		F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatcherPlus.hpp; sourceTree = "<group>"; };
+		F0F101082B0D3CB600C2AC0A /* Pascal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Pascal.cpp; sourceTree = "<group>"; };
+		F0F101092B0D3CB600C2AC0A /* Pascal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Pascal.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +96,8 @@
 				1C748C2E1C21952C0024EED2 /* Info.plist */,
 				CEA03B5C20EE825A00BA842F /* NWD.cpp */,
 				CEA03B5D20EE825A00BA842F /* NWD.hpp */,
+				F0F101082B0D3CB600C2AC0A /* Pascal.cpp */,
+				F0F101092B0D3CB600C2AC0A /* Pascal.hpp */,
 				F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */,
 				F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */,
 				403B245429C71C0300CF7A76 /* PluginStart.cpp */,
@@ -153,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0DF3B7E2B0CA4B2000523F4 /* PatcherPlus.hpp in Headers */,
+				F0F1010B2B0D3CB700C2AC0A /* Pascal.hpp in Headers */,
 				CEA03B5F20EE825A00BA842F /* NWD.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,6 +243,7 @@
 				CEA03B5E20EE825A00BA842F /* NWD.cpp in Sources */,
 				403B245529C71C0300CF7A76 /* PluginStart.cpp in Sources */,
 				CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */,
+				F0F1010A2B0D3CB700C2AC0A /* Pascal.cpp in Sources */,
 				F0DF3B7D2B0CA4B2000523F4 /* PatcherPlus.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

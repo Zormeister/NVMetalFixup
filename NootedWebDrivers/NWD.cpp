@@ -31,6 +31,7 @@ void NWD::init() {
         },
         this);
     lilu.onKextLoadForce(&kextGeForce);
+	lilu.onKextLoadForce(&kextNVDAStartup);
 	
 	auto *devInfo = DeviceInfo::create();
 	if (devInfo) {
@@ -61,11 +62,48 @@ void NWD::init() {
 	}
 }
 
+void NWD::setArchitecture() {
+	this->gpu->setMemoryEnable(true);
+	IOMemoryMap *map = this->gpu->mapDeviceMemoryWithRegister(0x10);
+	volatile UInt32 *addr = reinterpret_cast<UInt32 *>(map->getVirtualAddress());
+	
+	UInt8 val = (*(addr + 0xA03) & 0x1F);
+	
+	if (val == 0) {
+		val = (*(addr + 0x3) & 0x1F);
+	}
+	
+	DBGLOG("NWD", "TEST - PMC_BOOT_42: %x", val);
+	
+	if (val - 0x11 < 0x2) {
+		this->gfxGen = NVGen::GM100;
+		DBGLOG("NWD", "Identified GPU as GM100");
+	} else if (val == 0x13) {
+		this->gfxGen = NVGen::GP100;
+		DBGLOG("NWD", "Identified GPU as GP100");
+	}
+	
+	// revert
+	addr = nullptr;
+	map->unmap();
+	this->gpu->setMemoryEnable(false);
+}
+
 void NWD::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
 	DBGLOG("NWD", "TBD");
+	/*
 	if (kextNVDAGK100Hal.loadIndex == index) {
-		RouteRequestPlus request {"__ZN12NVDAGK100HAL5probeEP9IOServicePi", wrapFunctionReturnZero};
+		RouteRequestPlus request {"__ZN12NVDAGK100HAL5probeEP9IOServicePi", wrapReturnZeroButChangeNVTypeAndArch};
 		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the GK100Hal symbol!");
+	} else if (kextNVDAResman.loadIndex == index) {
+		RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapReturnZeroButChangeNVTypeAndArch};
+		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the NVDAResman symbol!");
+	}
+	*/
+	if (kextNVDAStartup.loadIndex == index) {
+		callback->setArchitecture();
+		const LookupPatchPlus patch {&kextNVDAStartup, kNVDAStartupForceGK100Original, kNVDAStartupForceGK100Patched, 1};
+		PANIC_COND(!patch.apply(patcher, address, size), "NWD", "Failed to force GK100 NVArch!");
 	}
 }
 
