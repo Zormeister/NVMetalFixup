@@ -4,7 +4,7 @@
 // yes, this is the continuation of that one repo with Optimus GPU tinkering.
 // GP10X support only 4 now
 
-#include "NootedWebDrivers.hpp"
+#include "NWD.hpp"
 #include <Headers/kern_api.hpp>
 #include <Headers/plugin_start.hpp>
 

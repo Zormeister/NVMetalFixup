@@ -9,7 +9,7 @@
 #include <IOKit/ndrvsupport/IONDRVFramebuffer.h>
 #include <IOKit/pci/IOPCIDevice.h>
 
-const char *NVIDIAArchStrings[] = {"GF100", "GK100", "GM100", "GP100", "GV100"};
+static const char *NVIDIAArchStrings[] = {"GF100", "GK100", "GM100", "GP100", "GV100"};
 
 // Methodology:
 // Step 1: Spoof everything but NVHal to GK100
