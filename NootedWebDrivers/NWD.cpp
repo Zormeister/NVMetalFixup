@@ -24,6 +24,8 @@ void NWD::init() {
     callback = this;
     SYSLOG("NWD", "-- CHEFKISS INTERNAL --");
 
+	lilu.onPatcherLoadForce(
+							[](void *user, KernelPatcher &patcher) { static_cast<NWD *>(user)->processPatcher(patcher); }, this);
     lilu.onKextLoadForce(
         nullptr, 0,
         [](void *user, KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
@@ -32,20 +34,21 @@ void NWD::init() {
         this);
     lilu.onKextLoadForce(&kextGeForce);
 	lilu.onKextLoadForce(&kextNVDAStartup);
-	
+}
+
+void NWD::processPatcher(KernelPatcher &patcher) {
 	auto *devInfo = DeviceInfo::create();
 	if (devInfo) {
 		devInfo->processSwitchOff();
-
 		
-
 		char name[256] = {0};
 		for (size_t i = 0; i < devInfo->videoExternal.size(); i++) {
 			auto *device = OSDynamicCast(IOPCIDevice, devInfo->videoExternal[i].video);
-			if (device->configRead16(kIOPCIConfigVendorID) != WIOKit::VendorID::NVIDIA) {
-				SYSLOG("NWD", "PCI Vendor ID is not NVIDIA, ignoring...");
-			} else {
+			if (!device) { continue; }
+			if (WIOKit::readPCIConfigValue(this->gpu, WIOKit::kIOPCIConfigVendorID) == WIOKit::VendorID::NVIDIA) {
 				this->gpu = device;
+			} else {
+				SYSLOG("NWD", "PCI Vendor ID is not NVIDIA, ignoring...");
 			}
 			if (device) {
 				snprintf(name, arrsize(name), "GFX%zu", i);
@@ -53,9 +56,9 @@ void NWD::init() {
 				WIOKit::awaitPublishing(device);
 			}
 		}
-
+		
 		this->deviceId = WIOKit::readPCIConfigValue(this->gpu, WIOKit::kIOPCIConfigDeviceID);
-
+		
 		DeviceInfo::deleter(devInfo);
 	} else {
 		SYSLOG("NWD", "Failed to create DeviceInfo");
@@ -69,13 +72,13 @@ void NWD::setArchitecture() {
 	
 	UInt8 val = (*(addr + 0xA03) & 0x1F);
 	
-	if (val == 0) {
+	if (!val) {
 		val = (*(addr + 0x3) & 0x1F);
 	}
 	
 	DBGLOG("NWD", "TEST - PMC_BOOT_42: %x", val);
 	
-	if (val - 0x11 < 0x2) {
+	if ((val - 0x11) < 0x2) {
 		this->gfxGen = NVGen::GM100;
 		DBGLOG("NWD", "Identified GPU as GM100");
 	} else if (val == 0x13) {
@@ -104,6 +107,8 @@ void NWD::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t ad
 		callback->setArchitecture();
 		const LookupPatchPlus patch {&kextNVDAStartup, kNVDAStartupForceGK100Original, kNVDAStartupForceGK100Patched, 1};
 		PANIC_COND(!patch.apply(patcher, address, size), "NWD", "Failed to force GK100 NVArch!");
+	} else if (kextGeForce.loadIndex == index) {
+		// This is where we'd pass it on to Pascal.cpp and vice versa
 	}
 }
 
