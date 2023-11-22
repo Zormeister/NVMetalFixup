@@ -27,11 +27,17 @@ fn main() {
     simple_logger::init().unwrap();
 
     let Some(kext_path) = std::env::args().nth(1).map(std::path::PathBuf::from) else {
-        error!("Usage: {} <kext_path> <data>", std::env::args().next().unwrap());
+        error!(
+            "Usage: {} <kext_path> <data>",
+            std::env::args().next().unwrap()
+        );
         return;
     };
     let Some(data_path) = std::env::args().nth(2).map(std::path::PathBuf::from) else {
-        error!("Usage: {} <kext_path> <data>", std::env::args().next().unwrap());
+        error!(
+            "Usage: {} <kext_path> <data>",
+            std::env::args().next().unwrap()
+        );
         return;
     };
     let data: Data = ron::from_str(&std::fs::read_to_string(data_path).unwrap()).unwrap();
