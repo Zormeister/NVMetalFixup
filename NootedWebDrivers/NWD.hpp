@@ -18,6 +18,7 @@ static const char *NVIDIAArchStrings[] = {"GF100", "GK100", "GM100", "GP100", "G
 // Step 4: Profit???
 
 class NWD {
+	friend class Pascal;
     public:
     static NWD *callback;
 	

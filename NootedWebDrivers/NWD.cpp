@@ -4,6 +4,7 @@
 #include "NWD.hpp"
 #include "GeForce.hpp"
 #include "PatcherPlus.hpp"
+#include "Pascal.hpp"
 #include <Headers/kern_api.hpp>
 #include <Headers/kern_devinfo.hpp>
 
@@ -17,6 +18,25 @@ static KernelPatcher::KextInfo kextGeForce {"com.apple.GeForce", &pathGeForce, 1
 static KernelPatcher::KextInfo kextNVDAStartup {"com.apple.nvidia.NVDAStartup", &pathNVDAStartup, 1, {}, {}, KernelPatcher::KextInfo::Unloaded};
 static KernelPatcher::KextInfo kextNVDAGK100Hal {"com.apple.nvidia.driver.NVDAGK100Hal", &pathNVDAGK100Hal, 1, {}, {}, KernelPatcher::KextInfo::Unloaded};
 static KernelPatcher::KextInfo kextNVDAResman {"com.apple.nvidia.driver.NVDAResman", &pathNVDAResman, 1, {}, {}, KernelPatcher::KextInfo::Unloaded};
+
+// How do the drivers attach?
+// NVDAStartup allocates IOServices, 'NVDAgl', 'NVDAinitgl', 'NVDAHal'
+// NVArch and NVType dictate what kernel extensions load
+
+// Load table:
+// NVType | Official | Web
+// -------------------------
+// NVArch |  GF100   | GF100
+// NVArch |  GK100   | GK100
+// NVArch |          | GM100
+// NVArch |          | GP100
+// NVArch |          | GV100
+
+// NVDAStartup sets NVArch or NVType to 'Unsupported' if the GPU doesn't match the PMC_BOOT_42 value expected
+
+// The kext 'GeForce' attaches when 'NVDAgl' has NVDAType 'Offical' and either of the two NVArch architectures listed
+
+Pascal pscl;
 
 NWD *NWD::callback = nullptr;
 
@@ -93,22 +113,24 @@ void NWD::setArchitecture() {
 }
 
 void NWD::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
-	DBGLOG("NWD", "TBD");
-	/*
-	if (kextNVDAGK100Hal.loadIndex == index) {
-		RouteRequestPlus request {"__ZN12NVDAGK100HAL5probeEP9IOServicePi", wrapReturnZeroButChangeNVTypeAndArch};
-		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the GK100Hal symbol!");
-	} else if (kextNVDAResman.loadIndex == index) {
-		RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapReturnZeroButChangeNVTypeAndArch};
-		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the NVDAResman symbol!");
-	}
-	*/
 	if (kextNVDAStartup.loadIndex == index) {
 		callback->setArchitecture();
 		const LookupPatchPlus patch {&kextNVDAStartup, kNVDAStartupForceGK100Original, kNVDAStartupForceGK100Patched, 1};
 		PANIC_COND(!patch.apply(patcher, address, size), "NWD", "Failed to force GK100 NVArch!");
+	} else if (kextNVDAGK100Hal.loadIndex == index) {
+		// Hopefully should encourage NVDAResmanWeb and NVDAGP100HalWeb to load
+		RouteRequestPlus request {"__ZN12NVDAGK100HAL5probeEP9IOServicePi", wrapReturnZeroButChangeNVTypeAndArch};
+		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the GK100Hal symbol!");
+	} else if (kextNVDAResman.loadIndex == index) {
+		// Hopefully should encourage NVDAResmanWeb and NVDAGP100HalWeb to load
+		RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapReturnZeroButChangeNVTypeAndArch};
+		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the NVDAResman symbol!");
 	} else if (kextGeForce.loadIndex == index) {
-		// This is where we'd pass it on to Pascal.cpp and vice versa
+		if (this->gfxGen == NVGen::GP100) {
+			if(pscl.processKext(patcher, index, address, size)) {
+				DBGLOG("NWD", "Processed GeForce");
+			}
+		}
 	}
 }
 

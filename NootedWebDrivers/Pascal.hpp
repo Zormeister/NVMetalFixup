@@ -5,9 +5,13 @@
 #include "NWD.hpp"
 
 class Pascal {
+public:
 	void init();
 	
 	bool processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size);
 	
 	Pascal *callback;
+	
+	static void wrapInitMemToMemCaps(void *that);
+	static void wrapInvalidateMMU(void *that, void *fifo);
 };

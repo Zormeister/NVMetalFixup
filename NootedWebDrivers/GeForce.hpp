@@ -11,15 +11,20 @@
 class nvPushBuffer : public OSObject {
 	OSDeclareAbstractStructors(nvPushBuffer);
 	
+public:
 	// Ghidra froze, I'll fill it in eventually.
 	virtual void free() APPLE_KEXT_OVERRIDE;
-	virtual bool init(class nvSomethingInterface *interface, class nvAcceleratorParent *accel, UInt32 space); // ?
-	// CreateContext...
-	// AssertMapped...
-	virtual bool AllocateMemory(UInt32 space) = 0; // Pure-virtual function
-	// FreeMemory...
+	virtual bool init(class nvChannelInterface *interface, class nvAcceleratorParent *accel, UInt32 space); // ?
+	virtual IOReturn CreateContextDma(UInt32 space) = 0; // ?
+	virtual void AssertMapped();
+	virtual IOReturn AllocateMemory(UInt32 space) = 0; // Pure-virtual function
+	virtual IOReturn FreeMemory();
 	
-	// MakeSpace...
+	void Flush();
+	IOReturn MakeSpace(UInt32 space);
+	
+	void *idk;
+	UInt32 *buffer; // field 0x8, offset from the pointer is 0x10, ask Ghidra I guess.
 };
 
 // Can't wait to have to do MTLDriver.
