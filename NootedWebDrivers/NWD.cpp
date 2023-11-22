@@ -127,7 +127,7 @@ void NWD::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t ad
 		PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the NVDAResman symbol!");
 	} else if (kextGeForce.loadIndex == index) {
 		if (this->gfxGen == NVGen::GP100) {
-			if(pscl.processKext(patcher, index, address, size)) {
+			if (pscl.processKext(patcher, index, address, size)) {
 				DBGLOG("NWD", "Processed GeForce");
 			}
 		}

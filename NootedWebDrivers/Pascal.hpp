@@ -14,4 +14,5 @@ public:
 	
 	static void wrapInitMemToMemCaps(void *that);
 	static void wrapInvalidateMMU(void *that, void *fifo);
+	static void wrapFlushGlobalCache(void *that, void *fifo, UInt32 flushMode);
 };

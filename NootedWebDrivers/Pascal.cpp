@@ -14,6 +14,7 @@ bool Pascal::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t
 	RouteRequestPlus requests[] = {
 		{"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
 		{"__ZN19nvFermiSharedPixels16InitMemToMemCapsEv", wrapInitMemToMemCaps},
+		{"__ZN10nvFermiHAL16FlushGlobalCacheEP15nvGpFifoChannel11nvFlushMode", wrapFlushGlobalCache},
 	};
 	return true;
 }
@@ -38,4 +39,21 @@ void Pascal::wrapInvalidateMMU(void *that, void *fifo) {
 	*(buffer->buffer + 0x10) = 0x48000000;
 	
 	// A value gets set here, research required.
+}
+
+void Pascal::wrapFlushGlobalCache(void *that, void *fifo, UInt32 flushMode) {
+	if (flushMode != 1 && flushMode != 4) {
+		// Obtain the PushBuffer
+		nvPushBuffer *buffer = getMember<nvPushBuffer *>(fifo, 0x150);
+		buffer->MakeSpace(0x5);
+		
+		// Input the values
+		*buffer->buffer = 0x2004000A;
+		*(buffer->buffer + 0x4) = 0;
+		*(buffer->buffer + 0x8) = 0;
+		*(buffer->buffer + 0xC) = 0;
+		*(buffer->buffer + 0x10) = 0x70000000;
+		
+		getMember<UInt16>(that, 0x74) = 0x100;
+	}
 }
