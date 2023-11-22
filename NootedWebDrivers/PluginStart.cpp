@@ -1,8 +1,5 @@
-//  Copyright © 2023 ChefKiss Inc. Licensed under the Thou Shalt Not Profit License version 1.5.
-//  See LICENSE for details.
-
-// yes, this is the continuation of that one repo with Optimus GPU tinkering.
-// GP10X support only 4 now
+//! Copyright © 2023 ChefKiss Inc. Licensed under the Thou Shalt Not Profit License version 1.5.
+//! See LICENSE for details.
 
 #include "NWD.hpp"
 #include <Headers/kern_api.hpp>
