@@ -6,19 +6,18 @@
 
 void Pascal::init() { callback = this; }
 
-void Pascal::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
+void Pascal::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size) {
     //! Fermi and Kepler share a lot of logic, Jesus.
 
     SolveRequestPlus solverequest {"__ZN12nvPushBuffer9MakeSpaceEj", orgMakeSpace};
-    PANIC_COND(!solverequest.solve(patcher, index, address, size), "Pascal", "Failed to solve symbol");
+    PANIC_COND(!solverequest.solve(patcher, id, address, size), "Pascal", "Failed to solve symbol");
 
     RouteRequestPlus requests[] = {
         {"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
         {"__ZN19nvFermiSharedPixels16InitMemToMemCapsEv", wrapInitMemToMemCaps},
         {"__ZN10nvFermiHAL16FlushGlobalCacheEP15nvGpFifoChannel11nvFlushMode", wrapFlushGlobalCache},
     };
-    PANIC_COND(!RouteRequestPlus::routeAll(patcher, index, requests, address, size), "Pascal",
-        "Failed to route symbols");
+    PANIC_COND(!RouteRequestPlus::routeAll(patcher, id, requests, address, size), "Pascal", "Failed to route symbols");
 }
 
 //! The only difference between `nvKeplerSharedPixels` and `nvMaxwellSharedPixels`

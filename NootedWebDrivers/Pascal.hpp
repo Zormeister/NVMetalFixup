@@ -8,12 +8,11 @@ using t_makeSpace = IOReturn (*)(void *that, UInt32 space);
 
 class Pascal {
     public:
-    void init();
-
-    void processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size);
-
     static Pascal *callback;
+    void init();
+    void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size);
 
+    private:
     t_makeSpace orgMakeSpace = {nullptr};
 
     static void wrapInitMemToMemCaps(void *that);

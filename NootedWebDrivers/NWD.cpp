@@ -44,8 +44,12 @@ static Pascal pascal;
 NWD *NWD::callback = nullptr;
 
 void NWD::init() {
-    callback = this;
     SYSLOG("NWD", "-- CHEFKISS INTERNAL --");
+    callback = this;
+
+    lilu.onKextLoadForce(&kextNVDAStartup);
+    lilu.onKextLoadForce(&kextGeForce);
+    pascal.init();
 
     lilu.onPatcherLoadForce(
         [](void *user, KernelPatcher &patcher) { static_cast<NWD *>(user)->processPatcher(patcher); }, this);
@@ -55,10 +59,6 @@ void NWD::init() {
             static_cast<NWD *>(user)->processKext(patcher, index, address, size);
         },
         this);
-    lilu.onKextLoadForce(&kextNVDAStartup);
-    lilu.onKextLoadForce(&kextGeForce);
-
-    pascal.init();
 }
 
 void NWD::processPatcher(KernelPatcher &) {
@@ -110,23 +110,23 @@ void NWD::setArchitecture() {
     this->gpu->setMemoryEnable(false);
 }
 
-void NWD::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
-    if (kextNVDAStartup.loadIndex == index) {
+void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size) {
+    if (kextNVDAStartup.loadIndex == id) {
         callback->setArchitecture();
         const LookupPatchPlus patch {&kextNVDAStartup, kNVDAStartupForceGK100Original, kNVDAStartupForceGK100Patched,
             1};
         PANIC_COND(!patch.apply(patcher, address, size), "NWD", "Failed to force GK100 NVArch!");
-    } else if (kextNVDAGK100Hal.loadIndex == index) {
+    } else if (kextNVDAGK100Hal.loadIndex == id) {
         // Hopefully should encourage NVDAResmanWeb and NVDAGP100HalWeb to load
         RouteRequestPlus request {"__ZN12NVDAGK100HAL5probeEP9IOServicePi", wrapProbeFailButChangeNVTypeAndArch};
-        PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the GK100Hal symbol!");
-    } else if (kextNVDAResman.loadIndex == index) {
+        PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route the GK100Hal symbol!");
+    } else if (kextNVDAResman.loadIndex == id) {
         // Hopefully should encourage NVDAResmanWeb and NVDAGP100HalWeb to load
         RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapProbeFailButChangeNVTypeAndArch};
-        PANIC_COND(!request.route(patcher, index, address, size), "NWD", "Failed to route the NVDAResman symbol!");
-    } else if (kextGeForce.loadIndex == index) {
+        PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route the NVDAResman symbol!");
+    } else if (kextGeForce.loadIndex == id) {
         if (this->gfxGen == NVGen::GP100) {
-            pascal.processKext(patcher, index, address, size);
+            pascal.processKext(patcher, id, address, size);
             DBGLOG("NWD", "Processed GeForce");
         }
     }
