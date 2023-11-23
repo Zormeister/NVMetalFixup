@@ -8,10 +8,10 @@ void Pascal::init() { callback = this; }
 
 void Pascal::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
     //! Fermi and Kepler share a lot of logic, Jesus.
-	
-	SolveRequestPlus solverequest {"__ZN12nvPushBuffer9MakeSpaceEj", orgMakeSpace};
-	PANIC_COND(!solverequest.solve(patcher, index, address, size), "Pascal", "Failed to solve symbol");
-	
+
+    SolveRequestPlus solverequest {"__ZN12nvPushBuffer9MakeSpaceEj", orgMakeSpace};
+    PANIC_COND(!solverequest.solve(patcher, index, address, size), "Pascal", "Failed to solve symbol");
+
     RouteRequestPlus requests[] = {
         {"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
         {"__ZN19nvFermiSharedPixels16InitMemToMemCapsEv", wrapInitMemToMemCaps},
@@ -30,8 +30,8 @@ void Pascal::wrapInitMemToMemCaps(void *that) {
 
 void Pascal::wrapInvalidateMMU(void *that, void *fifoChannel) {
     void *pushBuffer = getMember<void *>(fifoChannel, 0x150);
-	callback->orgMakeSpace(pushBuffer, 5);
-	UInt32 *data = getMember<UInt32 *>(that, 0x10);
+    callback->orgMakeSpace(pushBuffer, 5);
+    UInt32 *data = getMember<UInt32 *>(that, 0x10);
     data[0] = 0x2004000A;
     data[1] = 0x00000000;
     data[2] = 0x00000000;
@@ -45,7 +45,7 @@ void Pascal::wrapFlushGlobalCache(void *that, void *fifoChannel, UInt32 flushMod
     if (flushMode != 1 && flushMode != 4) {
         void *pushBuffer = getMember<void *>(fifoChannel, 0x150);
         callback->orgMakeSpace(pushBuffer, 5);
-		UInt32 *data = getMember<UInt32 *>(that, 0x10);
+        UInt32 *data = getMember<UInt32 *>(that, 0x10);
         data[0] = 0x2004000A;
         data[1] = 0x00000000;
         data[2] = 0x00000000;

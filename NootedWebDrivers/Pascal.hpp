@@ -14,8 +14,8 @@ class Pascal {
 
     static Pascal *callback;
 
-	t_makeSpace orgMakeSpace = {nullptr};
-	
+    t_makeSpace orgMakeSpace = {nullptr};
+
     static void wrapInitMemToMemCaps(void *that);
     static void wrapInvalidateMMU(void *that, void *fifoChannel);
     static void wrapFlushGlobalCache(void *that, void *fifoChannel, UInt32 flushMode);
