@@ -37,9 +37,9 @@ static KernelPatcher::KextInfo kextNVDAResman {"com.apple.nvidia.driver.NVDAResm
 //!
 //! NVDAStartup sets NVArch or NVType to 'Unsupported' if the GPU doesn't match the PMC_BOOT_42 value expected
 //!
-//! The kext 'GeForce' attaches when 'NVDAgl' has NVDAType 'Offical' and either of the two NVArch architectures listed
+//! The kext 'GeForce' attaches when 'NVDAgl' has NVDAType 'Official' and either of the two NVArch architectures listed
 
-Pascal pascal;
+static Pascal pascal;
 
 NWD *NWD::callback = nullptr;
 
