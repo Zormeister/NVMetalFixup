@@ -2,13 +2,16 @@
 //! See LICENSE for details.
 
 #include "Pascal.hpp"
-#include "GeForce.hpp"
 #include "PatcherPlus.hpp"
 
 void Pascal::init() { callback = this; }
 
 void Pascal::processKext(KernelPatcher &patcher, size_t index, mach_vm_address_t address, size_t size) {
     //! Fermi and Kepler share a lot of logic, Jesus.
+	
+	SolveRequestPlus solverequest {"__ZN12nvPushBuffer9MakeSpaceEj", orgMakeSpace};
+	PANIC_COND(!solverequest.solve(patcher, index, address, size), "Pascal", "Failed to solve symbol");
+	
     RouteRequestPlus requests[] = {
         {"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
         {"__ZN19nvFermiSharedPixels16InitMemToMemCapsEv", wrapInitMemToMemCaps},
@@ -25,28 +28,30 @@ void Pascal::wrapInitMemToMemCaps(void *that) {
     getMember<UInt64>(that, 0x1C) = 0x1000000010000;
 }
 
-void Pascal::wrapInvalidateMMU(void *, void *fifoChannel) {
-    nvPushBuffer *pushBuffer = getMember<nvPushBuffer *>(fifoChannel, 0x150);
-    pushBuffer->MakeSpace(0x5);
-    pushBuffer->data[0] = 0x2004000A;
-    pushBuffer->data[1] = 0x00000000;
-    pushBuffer->data[2] = 0x00000000;
-    pushBuffer->data[3] = 0x00000001;
-    pushBuffer->data[4] = 0x48000000;
-    pushBuffer->data += 5;
+void Pascal::wrapInvalidateMMU(void *that, void *fifoChannel) {
+    void *pushBuffer = getMember<void *>(fifoChannel, 0x150);
+	callback->orgMakeSpace(pushBuffer, 5);
+	UInt32 *data = getMember<UInt32 *>(that, 0x10);
+    data[0] = 0x2004000A;
+    data[1] = 0x00000000;
+    data[2] = 0x00000000;
+    data[3] = 0x00000001;
+    data[4] = 0x48000000;
+    data += 5;
     getMember<UInt32>(fifoChannel, 0x4A0) = getMember<UInt32>(getMember<void *>(fifoChannel, 0x80), 0x384);
 }
 
 void Pascal::wrapFlushGlobalCache(void *that, void *fifoChannel, UInt32 flushMode) {
     if (flushMode != 1 && flushMode != 4) {
-        nvPushBuffer *pushBuffer = getMember<nvPushBuffer *>(fifoChannel, 0x150);
-        pushBuffer->MakeSpace(0x5);
-        pushBuffer->data[0] = 0x2004000A;
-        pushBuffer->data[1] = 0x00000000;
-        pushBuffer->data[2] = 0x00000000;
-        pushBuffer->data[3] = 0x00000000;
-        pushBuffer->data[4] = 0x70000000;
-        pushBuffer->data += 5;
+        void *pushBuffer = getMember<void *>(fifoChannel, 0x150);
+        callback->orgMakeSpace(pushBuffer, 5);
+		UInt32 *data = getMember<UInt32 *>(that, 0x10);
+        data[0] = 0x2004000A;
+        data[1] = 0x00000000;
+        data[2] = 0x00000000;
+        data[3] = 0x00000000;
+        data[4] = 0x70000000;
+        data += 5;
         getMember<UInt16>(that, 0x74) = 0x100;
     }
 }

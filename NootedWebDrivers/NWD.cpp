@@ -2,7 +2,6 @@
 //! See LICENSE for details.
 
 #include "NWD.hpp"
-#include "GeForce.hpp"
 #include "Pascal.hpp"
 #include "PatcherPlus.hpp"
 #include <Headers/kern_api.hpp>

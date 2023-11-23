@@ -51,7 +51,6 @@
 		CE8DA0822517C41A008C44E8 /* libkmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkmod.a; path = ../Lilu/MacKernelSDK/Library/x86_64/libkmod.a; sourceTree = "<group>"; };
 		CEA03B5C20EE825A00BA842F /* NWD.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NWD.cpp; sourceTree = "<group>"; };
 		CEA03B5D20EE825A00BA842F /* NWD.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NWD.hpp; sourceTree = "<group>"; };
-		F0DF3B7A2B0C92C6000523F4 /* GeForce.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GeForce.hpp; sourceTree = "<group>"; };
 		F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatcherPlus.cpp; sourceTree = "<group>"; };
 		F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatcherPlus.hpp; sourceTree = "<group>"; };
 		F0F101082B0D3CB600C2AC0A /* Pascal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Pascal.cpp; sourceTree = "<group>"; };
@@ -92,7 +91,6 @@
 		1C748C291C21952C0024EED2 /* NootedWebDrivers */ = {
 			isa = PBXGroup;
 			children = (
-				F0DF3B7A2B0C92C6000523F4 /* GeForce.hpp */,
 				1C748C2E1C21952C0024EED2 /* Info.plist */,
 				CEA03B5C20EE825A00BA842F /* NWD.cpp */,
 				CEA03B5D20EE825A00BA842F /* NWD.hpp */,
