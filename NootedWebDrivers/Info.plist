@@ -42,8 +42,6 @@
 	<string>1.0</string>
 	<key>OSBundleLibraries</key>
 	<dict>
-		<key>com.apple.GeForce</key>
-		<string>1.0</string>
 		<key>as.vit9696.Lilu</key>
 		<string>1.2.0</string>
 		<key>com.apple.iokit.IOPCIFamily</key>
