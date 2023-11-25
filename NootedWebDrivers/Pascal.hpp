@@ -4,8 +4,6 @@
 #pragma once
 #include "NWD.hpp"
 
-using t_makeSpace = IOReturn (*)(void *that, UInt32 space);
-
 class Pascal {
     public:
     static Pascal *callback;

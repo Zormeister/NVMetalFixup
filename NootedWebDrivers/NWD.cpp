@@ -2,6 +2,7 @@
 //! See LICENSE for details.
 
 #include "NWD.hpp"
+#include "Maxwell.hpp"
 #include "Pascal.hpp"
 #include "PatcherPlus.hpp"
 #include <Headers/kern_api.hpp>
@@ -40,6 +41,7 @@ static KernelPatcher::KextInfo kextNVDAResman {"com.apple.nvidia.driver.NVDAResm
 //! The kext 'GeForce' attaches when 'NVDAgl' has NVDAType 'Official' and either of the two NVArch architectures listed
 
 static Pascal pascal;
+static Maxwell maxwell;
 
 NWD *NWD::callback = nullptr;
 
@@ -48,8 +50,9 @@ void NWD::init() {
     callback = this;
 
     lilu.onKextLoadForce(&kextNVDAStartup);
+	lilu.onKextLoadForce(&kextNVDAGK100Hal);
+	lilu.onKextLoadForce(&kextNVDAResman);
     lilu.onKextLoadForce(&kextGeForce);
-    pascal.init();
 
     lilu.onPatcherLoadForce(
         [](void *user, KernelPatcher &patcher) { static_cast<NWD *>(user)->processPatcher(patcher); }, this);
@@ -59,6 +62,9 @@ void NWD::init() {
             static_cast<NWD *>(user)->processKext(patcher, index, address, size);
         },
         this);
+	
+	pascal.init();
+	maxwell.init();
 }
 
 void NWD::processPatcher(KernelPatcher &) {
@@ -78,7 +84,7 @@ void NWD::processPatcher(KernelPatcher &) {
                 break;
             }
         }
-        PANIC_COND(!this->gpu, "NDW", "No compatible GPU found");
+        PANIC_COND(!this->gpu, "NWD", "No compatible GPU found");
 
         this->deviceId = WIOKit::readPCIConfigValue(this->gpu, WIOKit::kIOPCIConfigDeviceID);
 
@@ -125,10 +131,14 @@ void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t addre
         RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapProbeFailButChangeNVTypeAndArch};
         PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route the NVDAResman symbol!");
     } else if (kextGeForce.loadIndex == id) {
-        if (this->gfxGen == NVGen::GP100) {
+		if (this->gfxGen == NVGen::GP100 || this->gfxGen == NVGen::GV100) {
+			//! GV10X uses Pascal logic? Investigation required.
             pascal.processKext(patcher, id, address, size);
             DBGLOG("NWD", "Processed GeForce");
-        }
+		} else {
+			maxwell.processKext(patcher, id, address, size);
+			DBGLOG("NWD", "Processed GeForce");
+		}
     }
 }
 

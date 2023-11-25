@@ -9,6 +9,8 @@
 #include <IOKit/ndrvsupport/IONDRVFramebuffer.h>
 #include <IOKit/pci/IOPCIDevice.h>
 
+using t_makeSpace = IOReturn (*)(void *that, UInt32 space);
+
 static const char *NVIDIAArchStrings[] = {"GF100", "GK100", "GM100", "GP100", "GV100"};
 
 //! Methodology:
