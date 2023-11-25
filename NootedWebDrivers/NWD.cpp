@@ -79,7 +79,7 @@ void NWD::processPatcher(KernelPatcher &) {
             snprintf(name, arrsize(name), "GFX%zu", i);
             WIOKit::renameDevice(device, name);
             WIOKit::awaitPublishing(device);
-            if (WIOKit::readPCIConfigValue(this->gpu, WIOKit::kIOPCIConfigVendorID) == WIOKit::VendorID::NVIDIA) {
+            if (WIOKit::readPCIConfigValue(device, WIOKit::kIOPCIConfigVendorID) == WIOKit::VendorID::NVIDIA) {
                 this->gpu = device;
                 break;
             }
