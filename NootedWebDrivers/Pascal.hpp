@@ -6,12 +6,13 @@
 
 class Pascal {
     public:
-    static Pascal *callback;
     void init();
     void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size);
 
     private:
-    t_makeSpace orgMakeSpace = {nullptr};
+    static Pascal *callback;
+
+    t_makeSpace orgMakeSpace {nullptr};
 
     static void wrapInitMemToMemCaps(void *that);
     static void wrapInvalidateMMU(void *that, void *fifoChannel);

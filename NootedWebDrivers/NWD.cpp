@@ -50,8 +50,8 @@ void NWD::init() {
     callback = this;
 
     lilu.onKextLoadForce(&kextNVDAStartup);
-	lilu.onKextLoadForce(&kextNVDAGK100Hal);
-	lilu.onKextLoadForce(&kextNVDAResman);
+    lilu.onKextLoadForce(&kextNVDAGK100Hal);
+    lilu.onKextLoadForce(&kextNVDAResman);
     lilu.onKextLoadForce(&kextGeForce);
 
     lilu.onPatcherLoadForce(
@@ -62,9 +62,9 @@ void NWD::init() {
             static_cast<NWD *>(user)->processKext(patcher, index, address, size);
         },
         this);
-	
-	pascal.init();
-	maxwell.init();
+
+    pascal.init();
+    maxwell.init();
 }
 
 void NWD::processPatcher(KernelPatcher &) {
@@ -131,14 +131,14 @@ void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t addre
         RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapProbeFailButChangeNVTypeAndArch};
         PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route the NVDAResman symbol!");
     } else if (kextGeForce.loadIndex == id) {
-		if (this->gfxGen == NVGen::GP100 || this->gfxGen == NVGen::GV100) {
-			//! GV10X uses Pascal logic? Investigation required.
+        if (this->gfxGen == NVGen::GP100 || this->gfxGen == NVGen::GV100) {
+            //! GV10X uses Pascal logic? Investigation required.
             pascal.processKext(patcher, id, address, size);
             DBGLOG("NWD", "Processed GeForce");
-		} else {
-			maxwell.processKext(patcher, id, address, size);
-			DBGLOG("NWD", "Processed GeForce");
-		}
+        } else {
+            maxwell.processKext(patcher, id, address, size);
+            DBGLOG("NWD", "Processed GeForce");
+        }
     }
 }
 

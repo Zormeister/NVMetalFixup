@@ -19,33 +19,35 @@ static const char *NVIDIAArchStrings[] = {"GF100", "GK100", "GM100", "GP100", "G
 //! Step 3: Force the correct HAL kernel extension
 //! Step 4: Profit???
 
+enum struct NVGen {
+    GM100 = 0,
+    GP100,
+    //! Needs GV100HALWeb binary from THAT Web Drivers package.
+    GV100,
+    Unknown,
+};
+
 class NWD {
     friend class Pascal;
+    friend class Maxwell;
 
     public:
+    void init();
+
+    private:
     static NWD *callback;
 
-    enum struct NVGen {
-        GM100 = 0,
-        GP100,
-        //! Needs GV100HALWeb binary from THAT Web Drivers package.
-        GV100,
-        Unknown,
-    };
+    UInt32 deviceId {0};
+    IOPCIDevice *gpu {nullptr};
+    NVGen gfxGen {NVGen::Unknown};
+
+    void setArchitecture();
 
     const char *getArchString() {
         static const char *arches[] = {"GM100", "GP100", "GV100", "Unsupported"};
         return arches[static_cast<int>(this->gfxGen)];
     }
 
-    UInt32 deviceId {0};
-    IOPCIDevice *gpu {nullptr};
-    NVGen gfxGen {NVGen::Unknown};
-
-    void init();
-    void setArchitecture();
-
-    private:
     void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size);
     void processPatcher(KernelPatcher &patcher);
 

@@ -8,11 +8,10 @@ Pascal *Pascal::callback = nullptr;
 
 void Pascal::init() { callback = this; }
 
+//! Fermi and Kepler share a lot of logic, Jesus.
 void Pascal::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size) {
-    //! Fermi and Kepler share a lot of logic, Jesus.
-
-    SolveRequestPlus solverequest {"__ZN12nvPushBuffer9MakeSpaceEj", this->orgMakeSpace};
-    PANIC_COND(!solverequest.solve(patcher, id, address, size), "Pascal", "Failed to solve symbol");
+    SolveRequestPlus solveRequest {"__ZN12nvPushBuffer9MakeSpaceEj", this->orgMakeSpace};
+    PANIC_COND(!solveRequest.solve(patcher, id, address, size), "Pascal", "Failed to solve MakeSpace");
 
     RouteRequestPlus requests[] = {
         {"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
