@@ -4,6 +4,8 @@
 #include "Pascal.hpp"
 #include "PatcherPlus.hpp"
 
+Pascal *Pascal::callback = nullptr;
+
 void Pascal::init() { callback = this; }
 
 void Pascal::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size) {
