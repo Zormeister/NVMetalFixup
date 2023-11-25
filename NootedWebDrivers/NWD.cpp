@@ -7,6 +7,7 @@
 #include "PatcherPlus.hpp"
 #include <Headers/kern_api.hpp>
 #include <Headers/kern_devinfo.hpp>
+#include <Headers/kern_iokit.hpp>
 
 static const char *pathNVDAStartup = "/System/Library/Extensions/NVDAStartup.kext/Contents/MacOS/NVDAStartup";
 static const char *pathGeForce = "/System/Library/Extensions/GeForce.kext/Contents/MacOS/GeForce";
@@ -96,7 +97,7 @@ void NWD::processPatcher(KernelPatcher &) {
 
 void NWD::setArchitecture() {
     this->gpu->setMemoryEnable(true);
-    IOMemoryMap *map = this->gpu->mapDeviceMemoryWithRegister(0x10);
+    IOMemoryMap *map = this->gpu->mapDeviceMemoryWithRegister(WIOKit::kIOPCIConfigBaseAddress0);
     volatile UInt8 *addr = reinterpret_cast<UInt8 *>(map->getVirtualAddress());
 
     UInt8 pmcBoot42 = (addr[0xA03] & 0x1F) ?: (addr[0x3] & 0x1F);
