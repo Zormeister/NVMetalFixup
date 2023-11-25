@@ -14,7 +14,7 @@ static const char *pathGeForce = "/System/Library/Extensions/GeForce.kext/Conten
 static const char *pathNVDAGK100Hal = "/System/Library/Extensions/NVDAGK100Hal.kext/Contents/MacOS/NVDAGK100Hal";
 static const char *pathNVDAResman = "/System/Library/Extensions/NVDAResman.kext/Contents/MacOS/NVDAResman";
 
-//! Yes that's the CFBundleIdentfier, it breaks NVIDIA's convention. Great job once again NVIDIA.
+//! Yes that's the CFBundleIdentifier, it breaks NVIDIA's convention. Great job once again NVIDIA.
 static KernelPatcher::KextInfo kextNVDAStartup {"com.apple.nvidia.NVDAStartup", &pathNVDAStartup, 1, {}, {},
     KernelPatcher::KextInfo::Unloaded};
 static KernelPatcher::KextInfo kextGeForce {"com.apple.GeForce", &pathGeForce, 1, {}, {},
@@ -152,16 +152,3 @@ IOService *NWD::wrapProbeFailButChangeNVTypeAndArch(IOService *, IOService *prov
     OSSafeReleaseNULL(value);
     return nullptr;
 }
-
-IOService *NWD::wrapProbeFailButRevert(IOService *, IOService *provider) {
-    OSString *value = OSString::withCString("Official");
-    provider->setProperty("NVDAType", value);
-    OSSafeReleaseNULL(value);
-    value = OSString::withCString("GK100");
-    provider->setProperty("NVDAArch", value);
-    OSSafeReleaseNULL(value);
-    return nullptr;
-}
-
-//! NVDAGK100Hal sobbing over losing its job.
-IOService *NWD::wrapFunctionReturnZero(IOService *, IOService *) { return nullptr; }

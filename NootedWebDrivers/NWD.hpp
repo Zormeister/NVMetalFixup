@@ -51,9 +51,7 @@ class NWD {
     void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size);
     void processPatcher(KernelPatcher &patcher);
 
-    static IOService *wrapFunctionReturnZero(IOService *that, IOService *provider);
     static IOService *wrapProbeFailButChangeNVTypeAndArch(IOService *that, IOService *provider);
-    static IOService *wrapProbeFailButRevert(IOService *that, IOService *provider);
 };
 
 static constexpr UInt8 kNVDAStartupForceGK100Original[] = {0x41, 0x8D, 0x44, 0x24, 0xF2, 0x83, 0xF8, 0x03, 0x73, 0x10};
