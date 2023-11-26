@@ -140,6 +140,8 @@ void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t addre
             maxwell.processKext(patcher, id, address, size);
             DBGLOG("NWD", "Processed GeForce");
         }
+		RouteRequestPlus request {"__ZN13nvAccelerator13newUserClientEP4taskPvjPP12IOUserClient", wrapNewUserClient, this->orgNewUserClient};
+		PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route newUserClient");
     }
 }
 
@@ -151,4 +153,39 @@ IOService *NWD::wrapProbeFailButChangeNVTypeAndArch(IOService *, IOService *prov
     provider->setProperty("NVDAArch", value);
     OSSafeReleaseNULL(value);
     return nullptr;
+}
+
+IOReturn NWD::wrapNewUserClient(void *that, task_t owningTask, void *securityID, UInt32 type, OSDictionary *handler, IOUserClient **properties) {
+	switch (type) {
+		case kIOGraphicsAcceleratorClientSurface:
+			DBGLOG("NWD", "newUserClient: creating IOAccelSurface");
+			break;
+		case kIOGraphicsAcceleratorClient2DContext:
+			DBGLOG("NWD", "newUserClient: creating IOAccel2DContext");
+			break;
+		case kIOGraphicsAcceleratorClientDisplayPipe:
+			DBGLOG("NWD", "newUserClient: creating IOAccelDisplayPipeUserClient");
+			break;
+		case kIOGraphicsAcceleratorClientDevice:
+			DBGLOG("NWD", "newUserClient: creating IOAccelDevice");
+			break;
+		case kIOGraphicsAcceleratorClientShared:
+			DBGLOG("NWD", "newUserClient: creating IOAccelSharedUserClient");
+			break;
+		case kIOGraphicsAcceleratorClientMemoryInfo:
+			DBGLOG("NWD", "newUserClient: creating IOAccelMemoryInfoUserClient");
+			break;
+		case kIOGraphicsAcceleratorClientCommandQueue:
+			DBGLOG("NWD", "newUserClient: creating IOAccelCommandQueue");
+			break;
+		default:
+			//! nvAccelerator::newUserClient has some of it's own UCs?
+			//! nvCudaContext.
+			DBGLOG("NWD", "newUserClient: wtf? id: 0x%x, assuming as IOAccelContext", type);
+			break;
+	}
+	IODelay(100);
+	auto ret = FunctionCast(wrapNewUserClient, callback->orgNewUserClient)(that, owningTask, securityID, type, handler, properties);
+	DBGLOG("NWD", "newUserClient >> 0x%x", ret);
+	return ret;
 }
