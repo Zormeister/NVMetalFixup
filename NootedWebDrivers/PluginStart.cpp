@@ -7,9 +7,7 @@
 
 static NWD nwd;
 
-static const char *bootargDebug[] = {
-    "-NWDDebug",
-};
+static const char *bootargDebug = "-NWDDebug";
 
 PluginConfiguration ADDPR(config) {
     xStringify(PRODUCT_NAME),
@@ -17,8 +15,8 @@ PluginConfiguration ADDPR(config) {
     LiluAPI::AllowNormal | LiluAPI::AllowSafeMode,
     nullptr,
     0,
-    bootargDebug,
-    arrsize(bootargDebug),
+    &bootargDebug,
+    1,
     nullptr,
     0,
     KernelVersion::HighSierra,

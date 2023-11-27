@@ -9,16 +9,16 @@ Maxwell *Maxwell::callback = nullptr;
 void Maxwell::init() { callback = this; }
 
 //! Fermi and Kepler share a lot of logic, Jesus.
-void Maxwell::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size) {
+void Maxwell::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t slide, size_t size) {
     SolveRequestPlus solveRequest {"__ZN12nvPushBuffer9MakeSpaceEj", this->orgMakeSpace};
-    PANIC_COND(!solveRequest.solve(patcher, id, address, size), "Pascal", "Failed to solve symbol");
+    PANIC_COND(!solveRequest.solve(patcher, id, slide, size), "Pascal", "Failed to solve symbol");
 
     RouteRequestPlus requests[] = {
         {"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
         {"__ZN19nvFermiSharedPixels16InitMemToMemCapsEv", wrapInitMemToMemCaps},
         {"__ZN10nvFermiHAL16FlushGlobalCacheEP15nvGpFifoChannel11nvFlushMode", wrapFlushGlobalCache},
     };
-    PANIC_COND(!RouteRequestPlus::routeAll(patcher, id, requests, address, size), "Pascal", "Failed to route symbols");
+    PANIC_COND(!RouteRequestPlus::routeAll(patcher, id, requests, slide, size), "Pascal", "Failed to route symbols");
 }
 
 //! The only difference between `nvKeplerSharedPixels` and `nvMaxwellSharedPixels`

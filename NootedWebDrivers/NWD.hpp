@@ -10,18 +10,16 @@
 #include <IOKit/pci/IOPCIDevice.h>
 
 enum IOGraphicsAcceleratorClient : UInt32 {
-	kIOGraphicsAcceleratorClientSurface = 0,
-	kIOGraphicsAcceleratorClient2DContext = 2,
-	kIOGraphicsAcceleratorClientDisplayPipe = 4,
-	kIOGraphicsAcceleratorClientDevice,
-	kIOGraphicsAcceleratorClientShared,
-	kIOGraphicsAcceleratorClientMemoryInfo,
-	kIOGraphicsAcceleratorClientCommandQueue = 9,
+    kIOGraphicsAcceleratorClientSurface = 0,
+    kIOGraphicsAcceleratorClient2DContext = 2,
+    kIOGraphicsAcceleratorClientDisplayPipe = 4,
+    kIOGraphicsAcceleratorClientDevice,
+    kIOGraphicsAcceleratorClientShared,
+    kIOGraphicsAcceleratorClientMemoryInfo,
+    kIOGraphicsAcceleratorClientCommandQueue = 9,
 };
 
 using t_makeSpace = IOReturn (*)(void *that, UInt32 space);
-
-static const char *NVIDIAArchStrings[] = {"GF100", "GK100", "GM100", "GP100", "GV100"};
 
 //! Methodology:
 //! Step 1: Spoof everything but NVHal to GK100
@@ -58,15 +56,16 @@ class NWD {
         return arches[static_cast<int>(this->gfxGen)];
     }
 
-    void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size);
+    void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t slide, size_t size);
     void processPatcher(KernelPatcher &patcher);
 
     static IOService *wrapProbeFailButChangeNVTypeAndArch(IOService *that, IOService *provider);
-	
-	//! NVIDIA's drivers have a logic bug where the contextStop method isn't called on failure.
-	mach_vm_address_t orgNewUserClient = {0};
-	static IOReturn wrapNewUserClient(void *that, task_t owningTask, void *securityID, UInt32 type, OSDictionary *handler, IOUserClient **properties);
+
+    //! NVIDIA's drivers have a logic bug where the contextStop method isn't called on failure.
+    mach_vm_address_t orgNewUserClient {0};
+    static IOReturn wrapNewUserClient(void *that, task_t owningTask, void *securityID, UInt32 type,
+        OSDictionary *handler, IOUserClient **properties);
 };
 
-static constexpr UInt8 kNVDAStartupForceGK100Original[] = {0x41, 0x8D, 0x44, 0x24, 0xF2, 0x83, 0xF8, 0x03, 0x73, 0x10};
-static constexpr UInt8 kNVDAStartupForceGK100Patched[] = {0x66, 0x90, 0x66, 0x90, 0x66, 0x90, 0x66, 0x90, 0x66, 0x90};
+static const UInt8 kNVDAStartupForceGK100Original[] = {0x41, 0x8D, 0x44, 0x24, 0xF2, 0x83, 0xF8, 0x03, 0x73, 0x10};
+static const UInt8 kNVDAStartupForceGK100Patched[] = {0x66, 0x90, 0x66, 0x90, 0x66, 0x90, 0x66, 0x90, 0x66, 0x90};

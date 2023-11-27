@@ -55,6 +55,9 @@ void NWD::init() {
     lilu.onKextLoadForce(&kextNVDAResman);
     lilu.onKextLoadForce(&kextGeForce);
 
+    pascal.init();
+    maxwell.init();
+
     lilu.onPatcherLoadForce(
         [](void *user, KernelPatcher &patcher) { static_cast<NWD *>(user)->processPatcher(patcher); }, this);
     lilu.onKextLoadForce(
@@ -63,9 +66,6 @@ void NWD::init() {
             static_cast<NWD *>(user)->processKext(patcher, index, address, size);
         },
         this);
-
-    pascal.init();
-    maxwell.init();
 }
 
 void NWD::processPatcher(KernelPatcher &) {
@@ -117,31 +117,32 @@ void NWD::setArchitecture() {
     this->gpu->setMemoryEnable(false);
 }
 
-void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size) {
+void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t slide, size_t size) {
     if (kextNVDAStartup.loadIndex == id) {
         callback->setArchitecture();
         const LookupPatchPlus patch {&kextNVDAStartup, kNVDAStartupForceGK100Original, kNVDAStartupForceGK100Patched,
             1};
-        PANIC_COND(!patch.apply(patcher, address, size), "NWD", "Failed to force GK100 NVArch!");
+        PANIC_COND(!patch.apply(patcher, slide, size), "NWD", "Failed to force GK100 NVArch!");
     } else if (kextNVDAGK100Hal.loadIndex == id) {
         // Hopefully should encourage NVDAResmanWeb and NVDAGP100HalWeb to load
         RouteRequestPlus request {"__ZN12NVDAGK100HAL5probeEP9IOServicePi", wrapProbeFailButChangeNVTypeAndArch};
-        PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route the GK100Hal symbol!");
+        PANIC_COND(!request.route(patcher, id, slide, size), "NWD", "Failed to route the GK100Hal symbol!");
     } else if (kextNVDAResman.loadIndex == id) {
         // Hopefully should encourage NVDAResmanWeb and NVDAGP100HalWeb to load
         RouteRequestPlus request {"__ZN4NVDA5probeEP9IOServicePi", wrapProbeFailButChangeNVTypeAndArch};
-        PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route the NVDAResman symbol!");
+        PANIC_COND(!request.route(patcher, id, slide, size), "NWD", "Failed to route the NVDAResman symbol!");
     } else if (kextGeForce.loadIndex == id) {
         if (this->gfxGen == NVGen::GP100 || this->gfxGen == NVGen::GV100) {
             //! GV10X uses Pascal logic? Investigation required.
-            pascal.processKext(patcher, id, address, size);
+            pascal.processKext(patcher, id, slide, size);
             DBGLOG("NWD", "Processed GeForce");
         } else {
-            maxwell.processKext(patcher, id, address, size);
+            maxwell.processKext(patcher, id, slide, size);
             DBGLOG("NWD", "Processed GeForce");
         }
-		RouteRequestPlus request {"__ZN13nvAccelerator13newUserClientEP4taskPvjPP12IOUserClient", wrapNewUserClient, this->orgNewUserClient};
-		PANIC_COND(!request.route(patcher, id, address, size), "NWD", "Failed to route newUserClient");
+        RouteRequestPlus request {"__ZN13nvAccelerator13newUserClientEP4taskPvjPP12IOUserClient", wrapNewUserClient,
+            this->orgNewUserClient};
+        PANIC_COND(!request.route(patcher, id, slide, size), "NWD", "Failed to route newUserClient");
     }
 }
 
@@ -155,37 +156,39 @@ IOService *NWD::wrapProbeFailButChangeNVTypeAndArch(IOService *, IOService *prov
     return nullptr;
 }
 
-IOReturn NWD::wrapNewUserClient(void *that, task_t owningTask, void *securityID, UInt32 type, OSDictionary *handler, IOUserClient **properties) {
-	switch (type) {
-		case kIOGraphicsAcceleratorClientSurface:
-			DBGLOG("NWD", "newUserClient: creating IOAccelSurface");
-			break;
-		case kIOGraphicsAcceleratorClient2DContext:
-			DBGLOG("NWD", "newUserClient: creating IOAccel2DContext");
-			break;
-		case kIOGraphicsAcceleratorClientDisplayPipe:
-			DBGLOG("NWD", "newUserClient: creating IOAccelDisplayPipeUserClient");
-			break;
-		case kIOGraphicsAcceleratorClientDevice:
-			DBGLOG("NWD", "newUserClient: creating IOAccelDevice");
-			break;
-		case kIOGraphicsAcceleratorClientShared:
-			DBGLOG("NWD", "newUserClient: creating IOAccelSharedUserClient");
-			break;
-		case kIOGraphicsAcceleratorClientMemoryInfo:
-			DBGLOG("NWD", "newUserClient: creating IOAccelMemoryInfoUserClient");
-			break;
-		case kIOGraphicsAcceleratorClientCommandQueue:
-			DBGLOG("NWD", "newUserClient: creating IOAccelCommandQueue");
-			break;
-		default:
-			//! nvAccelerator::newUserClient has some of it's own UCs?
-			//! nvCudaContext.
-			DBGLOG("NWD", "newUserClient: wtf? id: 0x%x, assuming as IOAccelContext", type);
-			break;
-	}
-	IODelay(100);
-	auto ret = FunctionCast(wrapNewUserClient, callback->orgNewUserClient)(that, owningTask, securityID, type, handler, properties);
-	DBGLOG("NWD", "newUserClient >> 0x%x", ret);
-	return ret;
+IOReturn NWD::wrapNewUserClient(void *that, task_t owningTask, void *securityID, UInt32 type, OSDictionary *handler,
+    IOUserClient **properties) {
+    switch (type) {
+        case kIOGraphicsAcceleratorClientSurface:
+            DBGLOG("NWD", "newUserClient: creating IOAccelSurface");
+            break;
+        case kIOGraphicsAcceleratorClient2DContext:
+            DBGLOG("NWD", "newUserClient: creating IOAccel2DContext");
+            break;
+        case kIOGraphicsAcceleratorClientDisplayPipe:
+            DBGLOG("NWD", "newUserClient: creating IOAccelDisplayPipeUserClient");
+            break;
+        case kIOGraphicsAcceleratorClientDevice:
+            DBGLOG("NWD", "newUserClient: creating IOAccelDevice");
+            break;
+        case kIOGraphicsAcceleratorClientShared:
+            DBGLOG("NWD", "newUserClient: creating IOAccelSharedUserClient");
+            break;
+        case kIOGraphicsAcceleratorClientMemoryInfo:
+            DBGLOG("NWD", "newUserClient: creating IOAccelMemoryInfoUserClient");
+            break;
+        case kIOGraphicsAcceleratorClientCommandQueue:
+            DBGLOG("NWD", "newUserClient: creating IOAccelCommandQueue");
+            break;
+        default:
+            //! nvAccelerator::newUserClient has some of it's own UCs?
+            //! nvCudaContext.
+            DBGLOG("NWD", "newUserClient: wtf? id: 0x%x, assuming as IOAccelContext", type);
+            break;
+    }
+    IODelay(100);
+    auto ret = FunctionCast(wrapNewUserClient, callback->orgNewUserClient)(that, owningTask, securityID, type, handler,
+        properties);
+    DBGLOG("NWD", "newUserClient >> 0x%x", ret);
+    return ret;
 }

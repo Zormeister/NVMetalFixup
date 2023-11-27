@@ -7,7 +7,7 @@
 class Maxwell {
     public:
     void init();
-    void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t address, size_t size);
+    void processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t slide, size_t size);
 
     private:
     static Maxwell *callback;
