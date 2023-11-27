@@ -17,6 +17,8 @@ void Pascal::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t sl
         {"__ZN10nvFermiHAL13InvalidateMMUEP15nvGpFifoChannel", wrapInvalidateMMU},
         {"__ZN19nvFermiSharedPixels16InitMemToMemCapsEv", wrapInitMemToMemCaps},
         {"__ZN10nvFermiHAL16FlushGlobalCacheEP15nvGpFifoChannel11nvFlushMode", wrapFlushGlobalCache},
+        {"__ZN10nvFermiHAL8InitCapsEv", wrapInitCaps, this->orgInitCaps},
+        {"__ZN5nvHAL22GetFirstClassSupportedEPKjj", wrapGetFirstClassSupported, this->orgGetFirstClassSupported},
     };
     PANIC_COND(!RouteRequestPlus::routeAll(patcher, id, requests, slide, size), "Pascal", "Failed to route symbols");
 }
@@ -54,4 +56,33 @@ void Pascal::wrapFlushGlobalCache(void *that, void *fifoChannel, UInt32 flushMod
         data += 5;
         getMember<UInt16>(that, 0x74) = 0x100;
     }
+}
+
+void Pascal::wrapInitCaps(void *that) {
+    auto *info = getMember<void *>(that, 0x40);
+    const auto class_ = getMember<UInt32>(info, 0xFE0);
+    switch (class_) {
+        case 0xC097:    //! PASCAL_A
+            DBGLOG("Pascal", "Class is Pascal A");
+            getMember<UInt32>(info, 0x808) = 0x5204;
+            break;
+        case 0xC197:    //! PASCAL_B
+            DBGLOG("Pascal", "Class is Pascal B");
+            getMember<UInt32>(info, 0x808) = 0x5404;
+            break;
+        default:
+            DBGLOG("Pascal", "Unknown class 0x%X", class_);
+            getMember<UInt32>(info, 0x808) = 0x2005004;
+            break;
+    }
+    FunctionCast(wrapInitCaps, callback->orgInitCaps)(that);
+}
+
+UInt32 Pascal::wrapGetFirstClassSupported(void *that, const UInt32 *classes, UInt32 numClasses) {
+    auto ret = FunctionCast(wrapGetFirstClassSupported, callback->orgGetFirstClassSupported)(that, classes, numClasses);
+    if (!ret && numClasses) {
+        ret = classes[0];
+        DBGLOG("Pascal", "GetFirstClassSupported returned 0, returning 0x%X", ret);
+    }
+    return ret;
 }

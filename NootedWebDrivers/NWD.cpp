@@ -103,14 +103,17 @@ void NWD::setArchitecture() {
     UInt8 pmcBoot42 = (addr[0xA03] & 0x1F) ?: (addr[0x3] & 0x1F);
     DBGLOG("NWD", "PMC_BOOT_42: 0x%X", pmcBoot42);
 
-    if ((pmcBoot42 - 0x11) < 0x2) {
-        this->gfxGen = NVGen::GM100;
-        DBGLOG("NWD", "Identified GPU as GM100");
-    } else if (pmcBoot42 == 0x13) {
-        this->gfxGen = NVGen::GP100;
-        DBGLOG("NWD", "Identified GPU as GP100");
-    } else {
-        PANIC("NWD", "Failed to identify GPU");
+    switch (pmcBoot42) {
+        case 0x11 ... 0x12:
+            this->gfxGen = NVGen::GM100;
+            DBGLOG("NWD", "Identified GPU as GM100");
+            break;
+        case 0x13:
+            this->gfxGen = NVGen::GP100;
+            DBGLOG("NWD", "Identified GPU as GP100");
+            break;
+        default:
+            PANIC("NWD", "Failed to identify GPU");
     }
 
     OSSafeReleaseNULL(map);
@@ -140,9 +143,17 @@ void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t slide
             maxwell.processKext(patcher, id, slide, size);
             DBGLOG("NWD", "Processed GeForce");
         }
+
         RouteRequestPlus request {"__ZN13nvAccelerator13newUserClientEP4taskPvjPP12IOUserClient", wrapNewUserClient,
             this->orgNewUserClient};
         PANIC_COND(!request.route(patcher, id, slide, size), "NWD", "Failed to route newUserClient");
+
+        const LookupPatchPlus patches[] = {
+            {&kextGeForce, kGeForceCreateAndInitHALOriginal, kGeForceCreateAndInitHALOriginalMask,
+                kGeForceCreateAndInitHALPatched, kGeForceCreateAndInitHALPatchedMask, 2},
+            {&kextGeForce, kGeForceInitCapsOriginal, kGeForceInitCapsPatched, 1},
+        };
+        PANIC_COND(!LookupPatchPlus::applyAll(patcher, patches, slide, size), "NWD", "Failed to apply spoof patches");
     }
 }
 
@@ -186,7 +197,7 @@ IOReturn NWD::wrapNewUserClient(void *that, task_t owningTask, void *securityID,
             DBGLOG("NWD", "newUserClient: wtf? id: 0x%x, assuming as IOAccelContext", type);
             break;
     }
-    IODelay(100);
+    IODelay(1000);
     auto ret = FunctionCast(wrapNewUserClient, callback->orgNewUserClient)(that, owningTask, securityID, type, handler,
         properties);
     DBGLOG("NWD", "newUserClient >> 0x%x", ret);
