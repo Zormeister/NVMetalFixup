@@ -112,6 +112,10 @@ void NWD::setArchitecture() {
             this->gfxGen = NVGen::GP100;
             DBGLOG("NWD", "Identified GPU as GP100");
             break;
+		case 0x15: //! ??????
+			this->gfxGen = NVGen::GV100;
+			DBGLOG("NWD", "Identified GPU as GV100");
+			break;
         default:
             PANIC("NWD", "Failed to identify GPU");
     }
@@ -197,7 +201,6 @@ IOReturn NWD::wrapNewUserClient(void *that, task_t owningTask, void *securityID,
             DBGLOG("NWD", "newUserClient: wtf? id: 0x%x, assuming as IOAccelContext", type);
             break;
     }
-    IODelay(1000);
     auto ret = FunctionCast(wrapNewUserClient, callback->orgNewUserClient)(that, owningTask, securityID, type, handler,
         properties);
     DBGLOG("NWD", "newUserClient >> 0x%x", ret);

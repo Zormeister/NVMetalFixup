@@ -14,6 +14,8 @@
 		CEA03B5F20EE825A00BA842F /* NWD.hpp in Headers */ = {isa = PBXBuildFile; fileRef = CEA03B5D20EE825A00BA842F /* NWD.hpp */; };
 		F03714972B11B42C00BE2AB4 /* Maxwell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F03714952B11B42C00BE2AB4 /* Maxwell.cpp */; };
 		F03714982B11B42C00BE2AB4 /* Maxwell.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F03714962B11B42C00BE2AB4 /* Maxwell.hpp */; };
+		F0AE37562B2692B400F80689 /* DYLDPatches.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0AE37542B2692B400F80689 /* DYLDPatches.hpp */; };
+		F0AE37572B2692B400F80689 /* DYLDPatches.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0AE37552B2692B400F80689 /* DYLDPatches.cpp */; };
 		F0DF3B7D2B0CA4B2000523F4 /* PatcherPlus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */; };
 		F0DF3B7E2B0CA4B2000523F4 /* PatcherPlus.hpp in Headers */ = {isa = PBXBuildFile; fileRef = F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */; };
 		F0F1010A2B0D3CB700C2AC0A /* Pascal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F0F101082B0D3CB600C2AC0A /* Pascal.cpp */; };
@@ -55,6 +57,8 @@
 		CEA03B5D20EE825A00BA842F /* NWD.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NWD.hpp; sourceTree = "<group>"; };
 		F03714952B11B42C00BE2AB4 /* Maxwell.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Maxwell.cpp; sourceTree = "<group>"; };
 		F03714962B11B42C00BE2AB4 /* Maxwell.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Maxwell.hpp; sourceTree = "<group>"; };
+		F0AE37542B2692B400F80689 /* DYLDPatches.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DYLDPatches.hpp; sourceTree = "<group>"; };
+		F0AE37552B2692B400F80689 /* DYLDPatches.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DYLDPatches.cpp; sourceTree = "<group>"; };
 		F0DF3B7B2B0CA4B2000523F4 /* PatcherPlus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatcherPlus.cpp; sourceTree = "<group>"; };
 		F0DF3B7C2B0CA4B2000523F4 /* PatcherPlus.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PatcherPlus.hpp; sourceTree = "<group>"; };
 		F0F101082B0D3CB600C2AC0A /* Pascal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Pascal.cpp; sourceTree = "<group>"; };
@@ -95,6 +99,8 @@
 		1C748C291C21952C0024EED2 /* NootedWebDrivers */ = {
 			isa = PBXGroup;
 			children = (
+				F0AE37552B2692B400F80689 /* DYLDPatches.cpp */,
+				F0AE37542B2692B400F80689 /* DYLDPatches.hpp */,
 				1C748C2E1C21952C0024EED2 /* Info.plist */,
 				F03714952B11B42C00BE2AB4 /* Maxwell.cpp */,
 				F03714962B11B42C00BE2AB4 /* Maxwell.hpp */,
@@ -164,6 +170,7 @@
 			files = (
 				F0DF3B7E2B0CA4B2000523F4 /* PatcherPlus.hpp in Headers */,
 				F0F1010B2B0D3CB700C2AC0A /* Pascal.hpp in Headers */,
+				F0AE37562B2692B400F80689 /* DYLDPatches.hpp in Headers */,
 				CEA03B5F20EE825A00BA842F /* NWD.hpp in Headers */,
 				F03714982B11B42C00BE2AB4 /* Maxwell.hpp in Headers */,
 			);
@@ -249,6 +256,7 @@
 				F0F1010A2B0D3CB700C2AC0A /* Pascal.cpp in Sources */,
 				CEA03B5E20EE825A00BA842F /* NWD.cpp in Sources */,
 				403B245529C71C0300CF7A76 /* PluginStart.cpp in Sources */,
+				F0AE37572B2692B400F80689 /* DYLDPatches.cpp in Sources */,
 				F03714972B11B42C00BE2AB4 /* Maxwell.cpp in Sources */,
 				CE405ED91E4A080700AA0B3D /* plugin_start.cpp in Sources */,
 			);
