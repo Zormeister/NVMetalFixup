@@ -38,6 +38,7 @@ enum struct NVGen {
 class NWD {
     friend class Pascal;
     friend class Maxwell;
+	friend class DYLDPatches;
 
     public:
     void init();

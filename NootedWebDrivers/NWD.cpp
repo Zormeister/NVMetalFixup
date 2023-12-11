@@ -5,6 +5,7 @@
 #include "Maxwell.hpp"
 #include "Pascal.hpp"
 #include "PatcherPlus.hpp"
+#include "DYLDPatches.hpp"
 #include <Headers/kern_api.hpp>
 #include <Headers/kern_devinfo.hpp>
 #include <Headers/kern_iokit.hpp>
@@ -43,6 +44,7 @@ static KernelPatcher::KextInfo kextNVDAResman {"com.apple.nvidia.driver.NVDAResm
 
 static Pascal pascal;
 static Maxwell maxwell;
+static DYLDPatches dyld;
 
 NWD *NWD::callback = nullptr;
 
@@ -57,6 +59,7 @@ void NWD::init() {
 
     pascal.init();
     maxwell.init();
+	dyld.init();
 
     lilu.onPatcherLoadForce(
         [](void *user, KernelPatcher &patcher) { static_cast<NWD *>(user)->processPatcher(patcher); }, this);
@@ -68,7 +71,7 @@ void NWD::init() {
         this);
 }
 
-void NWD::processPatcher(KernelPatcher &) {
+void NWD::processPatcher(KernelPatcher &patcher) {
     auto *devInfo = DeviceInfo::create();
     if (devInfo) {
         devInfo->processSwitchOff();
@@ -93,6 +96,8 @@ void NWD::processPatcher(KernelPatcher &) {
     } else {
         SYSLOG("NWD", "Failed to create DeviceInfo");
     }
+	
+	dyld.processPatcher(patcher);
 }
 
 void NWD::setArchitecture() {
