@@ -20,6 +20,7 @@ enum IOGraphicsAcceleratorClient : UInt32 {
 };
 
 using t_makeSpace = IOReturn (*)(void *that, UInt32 space);
+using t_contextStop = void (*)(void *that);
 
 //! Methodology:
 //! Step 1: Spoof everything but NVHal to GK100
@@ -66,6 +67,24 @@ class NWD {
     mach_vm_address_t orgNewUserClient {0};
     static IOReturn wrapNewUserClient(void *that, task_t owningTask, void *securityID, UInt32 type,
         OSDictionary *handler, IOUserClient **properties);
+	
+	t_contextStop org2DContextStop {0};
+	t_contextStop orgCLContextStop {0};
+	t_contextStop orgGLContextStop {0};
+	t_contextStop orgVideoContextStop {0};
+	t_contextStop orgSharedContextStop {0};
+	
+	mach_vm_address_t org2DContextStart {0};
+	mach_vm_address_t orgCLContextStart {0};
+	mach_vm_address_t orgGLContextStart {0};
+	mach_vm_address_t orgVideoContextStart {0};
+	mach_vm_address_t orgSharedContextStart {0};
+	
+	static bool wrap2DContextStart(void *that);
+	static bool wrapCLContextStart(void *that);
+	static bool wrapGLContextStart(void *that);
+	static bool wrapVideoContextStart(void *that);
+	static bool wrapSharedContextStart(void *that);
 };
 
 static const UInt8 kNVDAStartupForceGK100Original[] = {0x41, 0x8D, 0x44, 0x24, 0xF2, 0x83, 0xF8, 0x03, 0x73, 0x10};

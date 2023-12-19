@@ -152,10 +152,26 @@ void NWD::processKext(KernelPatcher &patcher, size_t id, mach_vm_address_t slide
             maxwell.processKext(patcher, id, slide, size);
             DBGLOG("NWD", "Processed GeForce");
         }
-
-        RouteRequestPlus request {"__ZN13nvAccelerator13newUserClientEP4taskPvjPP12IOUserClient", wrapNewUserClient,
-            this->orgNewUserClient};
-        PANIC_COND(!request.route(patcher, id, slide, size), "NWD", "Failed to route newUserClient");
+		
+		SolveRequestPlus solve[] {
+			{"__ZN11nv2DContext11contextStopEv", this->org2DContextStop},
+			{"__ZN11nvCLContext11contextStopEv", this->orgCLContextStop},
+			{"__ZN11nvGLContext11contextStopEv", this->orgGLContextStart},
+			{"__ZN14nvVideoContext11contextStopEv", this->orgVideoContextStop},
+			{"__ZN19nvShareGroupContext11contextStopEv", this->orgSharedContextStop},
+		};
+		PANIC_COND(!SolveRequestPlus::solveAll(patcher, id, solve, slide, size), "NWD", "Failed to solve contextStop instances!");
+		
+		RouteRequestPlus requests[] = {
+			{"__ZN13nvAccelerator13newUserClientEP4taskPvjPP12IOUserClient", wrapNewUserClient,
+				this->orgNewUserClient},
+			{"__ZN11nv2DContext12contextStartEv", wrap2DContextStart, this->org2DContextStart},
+			{"__ZN16nvFermiCLContext12contextStartEv", wrapCLContextStart, this->orgCLContextStart},
+			{"__ZN16nvFermiGLContext12contextStartEv", wrapGLContextStart, this->orgGLContextStart},
+			{"__ZN14nvVideoContext12contextStartEv", wrapVideoContextStart, this->orgVideoContextStart},
+			{"__ZN19nvShareGroupContext12contextStartEv", wrapSharedContextStart, this->orgSharedContextStart},
+		};
+		PANIC_COND(!RouteRequestPlus::routeAll(patcher, id, requests, slide, size), "Pascal", "Failed to route symbols");
 
         const LookupPatchPlus patches[] = {
             {&kextGeForce, kGeForceCreateAndInitHALOriginal, kGeForceCreateAndInitHALOriginalMask,
@@ -171,7 +187,7 @@ IOService *NWD::wrapProbeFailButChangeNVTypeAndArch(IOService *, IOService *prov
     provider->setProperty("NVDAType", value);
     OSSafeReleaseNULL(value);
     value = OSString::withCString(callback->getArchString());
-    provider->setProperty("NVDAArch", value);
+    provider->setProperty("NVArch", value);
     OSSafeReleaseNULL(value);
     return nullptr;
 }
@@ -210,4 +226,64 @@ IOReturn NWD::wrapNewUserClient(void *that, task_t owningTask, void *securityID,
         properties);
     DBGLOG("NWD", "newUserClient >> 0x%x", ret);
     return ret;
+}
+
+bool NWD::wrap2DContextStart(void *that) {
+	DBGLOG("NWD", "nv2DContext::contextStart <<");
+	auto ret = FunctionCast(wrap2DContextStart, callback->org2DContextStart)(that);
+	if (!ret) {
+		DBGLOG("NWD", "nv2DContext::contextStart failed. wtf?");
+		DBGLOG("NWD", "attempting to fix NVIDIA's shitcode");
+		callback->org2DContextStop(that);
+		return ret;
+	}
+	return ret;
+}
+
+bool NWD::wrapCLContextStart(void *that) {
+	DBGLOG("NWD", "nvCLContext::contextStart <<");
+	auto ret = FunctionCast(wrapCLContextStart, callback->orgCLContextStart)(that);
+	if (!ret) {
+		DBGLOG("NWD", "nvCLContext::contextStart failed. wtf?");
+		DBGLOG("NWD", "attempting to fix NVIDIA's shitcode");
+		callback->orgCLContextStop(that);
+		return ret;
+	}
+	return ret;
+}
+
+bool NWD::wrapGLContextStart(void *that) {
+	DBGLOG("NWD", "nvGLContext::contextStart <<");
+	auto ret = FunctionCast(wrapGLContextStart, callback->orgGLContextStart)(that);
+	if (!ret) {
+		DBGLOG("NWD", "nvGLContext::contextStart failed. wtf?");
+		DBGLOG("NWD", "attempting to fix NVIDIA's shitcode");
+		callback->orgGLContextStop(that);
+		return ret;
+	}
+	return ret;
+}
+
+bool NWD::wrapVideoContextStart(void *that) {
+	DBGLOG("NWD", "nvVideoContext::contextStart <<");
+	auto ret = FunctionCast(wrapVideoContextStart, callback->orgVideoContextStart)(that);
+	if (!ret) {
+		DBGLOG("NWD", "nvVideoContext::contextStart failed. wtf?");
+		DBGLOG("NWD", "attempting to fix NVIDIA's shitcode");
+		callback->orgVideoContextStop(that);
+	}
+	DBGLOG("NWD", "nvVideoContext::contextStart >>");
+	return ret;
+}
+
+bool NWD::wrapSharedContextStart(void *that) {
+	DBGLOG("NWD", "nvShareGroupContext::contextStart <<");
+	auto ret = FunctionCast(wrapSharedContextStart, callback->orgSharedContextStart)(that);
+	if (!ret) {
+		DBGLOG("NWD", "nvShareGroupContext::contextStart failed. wtf?");
+		DBGLOG("NWD", "attempting to fix NVIDIA's shitcode");
+		callback->orgSharedContextStop(that);
+	}
+	DBGLOG("NWD", "nvShareGroupContext::contextStart >>");
+	return ret;
 }
